@@ -1,0 +1,13 @@
+/.metals/
+/.vscode/
+/.bloop/
+/.bsp/
+/project/.bloop/
+/project/project/
+/project/target/
+
+
+/target/
+/core/target/
+
+/zio/util/target/
