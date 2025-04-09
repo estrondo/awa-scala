@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+
+package awa;
+
+service LiveTrackService {
+  rpc Record(stream LiveTrackRequest) returns (stream LiveTrackResponse);
+}
+
+message LiveTrackRequest {
+  // client generated id.
+  string request_id = 1;
+  // user id.
+  string owner = 2;
+  map<string, string> tags = 3;
+  // timestamp in seconds.
+  int64 timestamp = 4;
+  oneof content {
+    LiveTrackSegment segment = 5;
+    LiveTrackPosition position = 6;
+  }
+}
+
+message LiveTrackSegment {
+  // lon,lat coordinates.
+  repeated float segment = 1;
+  // It is a packed data.
+  // [14 bits for time offset in seconds]
+  // [18 bits for altitude in meters + 20000]
+  repeated uint32 packed_time_altitude = 2;
+}
+
+message LiveTrackPosition {
+  float lon = 1;
+  float lat = 2;
+  int32 altitude = 3;
+}
+
+message LiveTrackResponse {
+  string request_id = 1;
+  oneof content {
+    LiveTrackSuccess success = 2;
+    LiveTrackError error = 3;
+  }
+}
+
+message LiveTrackError {
+  string message = 1;
+  string type = 2;
+}
+
+message LiveTrackSuccess {
+  repeated Notification notification = 1;
+  repeated TotemNotification totem_notification = 2;
+}
+
+message TotemNotification {
+  string id = 1;
+  string title = 2;
+  string summary = 3;
+  string theme_color = 4;
+  string icon_url = 5;
+  float lon = 6;
+  float lat = 7;
+  int32 altitude = 8;
+}
+
+message Notification {
+  string id = 1;
+  string title = 2;
+  string summary = 3;
+  string theme_color = 4;
+}

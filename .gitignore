@@ -2,6 +2,7 @@
 /.vscode/
 /.bloop/
 /.bsp/
+/.idea/
 /project/.bloop/
 /project/project/
 /project/target/
@@ -9,5 +10,8 @@
 
 /target/
 /core/target/
+/zio/core/target/
 
-/zio/util/target/
+/persistence/postgres/target/
+/service/target/
+/zio/live-tracking/target/
