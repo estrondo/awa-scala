@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-
 package awa;
 
 service LiveTrackService {
@@ -15,25 +14,40 @@ message LiveTrackRequest {
   map<string, string> tags = 3;
   // timestamp in seconds.
   int64 timestamp = 4;
+
+  // device information.
+  string device_id = 5;
+  string device_type = 6;
+  string firmware_version = 7;
+
   oneof content {
-    LiveTrackSegment segment = 5;
-    LiveTrackPosition position = 6;
+    LiveTrackSegment segment = 8;
+    LiveTrackPosition position = 9;
   }
 }
 
 message LiveTrackSegment {
-  // lon,lat coordinates.
-  repeated float segment = 1;
-  // It is a packed data.
-  // [14 bits for time offset in seconds]
-  // [18 bits for altitude in meters + 20000]
-  repeated uint32 packed_time_altitude = 2;
+  int32 length = 1;
+  // BigEndian
+  // for each point:
+  // [float: lon]
+  // [float: lat]
+  // [unsigned short (16 bits): altitude - 20000 in meters]
+  // [12 unsigned bits: time_offset in seconds since in seconds]
+  // [unsigned byte: horizontal accuracy in meters]
+  // [unsigned byte: altitude accuracy in meters]
+  // [4 bits: reserved]
+  bytes data = 3;
 }
 
 message LiveTrackPosition {
-  float lon = 1;
-  float lat = 2;
-  int32 altitude = 3;
+  // BigEndian
+  // [float: lon]
+  // [float: lat]
+  // [unsigned short (16 bits): altitude - 20000 in meters]
+  // [unsigned byte: horizontal accuracy in meters]
+  // [unsigned byte: altitude accuracy in meters]
+  bytes data = 2;
 }
 
 message LiveTrackResponse {
@@ -45,8 +59,15 @@ message LiveTrackResponse {
 }
 
 message LiveTrackError {
-  string message = 1;
-  string type = 2;
+  // The error type.
+  string type = 1;
+  // An summary of the error.
+  string message = 2;
+  // the error code is alphanumeric.
+  string code = 3;
+
+  // additional data.
+  map<string, string> details = 4;
 }
 
 message LiveTrackSuccess {
