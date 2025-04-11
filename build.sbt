@@ -22,6 +22,7 @@ lazy val root = project
     zioCore,
     persistencePostgres,
     liveTrackingGrpcZIO,
+    accountGrpcZIO,
   )
 
 lazy val core = (project in file("core"))
@@ -55,6 +56,17 @@ lazy val service = (project in file("service"))
   .settings(
     name := "awa-service-impl",
     Dependencies.scalaz,
+  )
+  .dependsOn(
+    core    % cctt,
+    zioCore % cctt,
+  )
+
+lazy val accountGrpcZIO = (project in file("zio/account"))
+  .settings(
+    name := "awa-account-grpc-zio",
+    zioGrpcSettings,
+    Dependencies.zioGrpc,
   )
   .dependsOn(
     core    % cctt,

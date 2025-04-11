@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package awa;
+
+service AccountService {
+  rpc Authorise(AuthoriseRequest) returns (AuthoriseResponse);
+  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+}
+
+message AuthoriseRequest {
+  string id = 1;
+  oneof method { OpenId open_id = 2; }
+}
+
+message OpenId {
+  string provider = 1;
+  string token = 2;
+}
+
+message AuthoriseResponse {
+  string request_id = 1;
+  oneof response {
+    Failed failed = 2;
+    Authorised authorised = 3;
+  }
+}
+
+message Failed { string message = 1; }
+
+message Authorised {
+  string refresh_token = 1;
+  bytes access_token = 2;
+}
+
+message RefreshRequest {
+  string id = 1;
+  string token = 2;
+}
+
+message RefreshResponse {
+  string request_id = 1;
+  oneof response {
+    Failed failed = 2;
+    Authorised authorised = 3;
+  }
+}
