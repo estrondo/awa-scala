@@ -10,7 +10,8 @@ message LiveTrackRequest {
   // client generated id.
   string id = 1;
   // user id.
-  string owner = 2;
+  string account_id = 2;
+  // used for filtering.
   map<string, string> tags = 3;
   // timestamp in seconds.
   int64 timestamp = 4;
@@ -30,23 +31,23 @@ message LiveTrackSegment {
   int32 length = 1;
   // BigEndian
   // for each point:
-  // [float: lon]
-  // [float: lat]
+  // [float (32 bits): lon]
+  // [float (32 bits): lat]
   // [unsigned short (16 bits): altitude - 20000 in meters]
-  // [12 unsigned bits: time_offset in seconds since in seconds]
-  // [unsigned byte: horizontal accuracy in meters]
-  // [unsigned byte: altitude accuracy in meters]
-  // [4 bits: reserved]
+  // [unsigned 10 bits: time_offset in seconds]
+  // [unsigned byte (8 bits): horizontal accuracy in meters]
+  // [unsigned byte (8 bits): altitude accuracy in meters]
+  // [6 bits: reserved]
   bytes data = 3;
 }
 
 message LiveTrackPosition {
   // BigEndian
-  // [float: lon]
-  // [float: lat]
+  // [float (32 bits): lon]
+  // [float (32 bits): lat]
   // [unsigned short (16 bits): altitude - 20000 in meters]
-  // [unsigned byte: horizontal accuracy in meters]
-  // [unsigned byte: altitude accuracy in meters]
+  // [unsigned byte (8 bits): horizontal accuracy in meters]
+  // [unsigned byte (8 bits): altitude accuracy in meters]
   bytes data = 2;
 }
 

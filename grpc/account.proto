@@ -3,11 +3,11 @@ syntax = "proto3";
 package awa.v1;
 
 service AccountService {
-  rpc Authorise(AuthoriseRequest) returns (AuthoriseResponse);
-  rpc Refresh(RefreshRequest) returns (RefreshResponse);
+  rpc Authorise(AuthorisationRequest) returns (AuthorisationResponse);
+  rpc Refresh(RefreshRequest) returns (AuthorisationResponse);
 }
 
-message AuthoriseRequest {
+message AuthorisationRequest {
   string id = 1;
   oneof method { OpenId open_id = 2; }
 }
@@ -17,7 +17,7 @@ message OpenId {
   string token = 2;
 }
 
-message AuthoriseResponse {
+message AuthorisationResponse {
   string request_id = 1;
   oneof response {
     Failed failed = 2;
@@ -35,12 +35,4 @@ message Authorised {
 message RefreshRequest {
   string id = 1;
   string token = 2;
-}
-
-message RefreshResponse {
-  string request_id = 1;
-  oneof response {
-    Failed failed = 2;
-    Authorised authorised = 3;
-  }
 }
