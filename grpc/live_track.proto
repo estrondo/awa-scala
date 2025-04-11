@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package awa;
+package awa.v1;
 
 service LiveTrackService {
   rpc Record(stream LiveTrackRequest) returns (stream LiveTrackResponse);

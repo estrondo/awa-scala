@@ -46,8 +46,10 @@ object Awa {
     )
   }
 
-  val zioGrpcSettings = Compile / PB.targets := Seq(
-    scalapb.gen(grpc = true)          -> (Compile / sourceManaged).value / "scalapb",
-    scalapb.zio_grpc.ZioCodeGenerator -> (Compile / sourceManaged).value / "scalapb",
-  )
+  object Settings {
+    val zioGrpc = Compile / PB.targets := Seq(
+      scalapb.gen(grpc = true)          -> (Compile / sourceManaged).value / "scalapb",
+      scalapb.zio_grpc.ZioCodeGenerator -> (Compile / sourceManaged).value / "scalapb",
+    )
+  }
 }

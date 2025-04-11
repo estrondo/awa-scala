@@ -65,7 +65,7 @@ lazy val service = (project in file("service"))
 lazy val accountGrpcZIO = (project in file("zio/account"))
   .settings(
     name := "awa-account-grpc-zio",
-    zioGrpcSettings,
+    Settings.zioGrpc,
     Dependencies.zioGrpc,
   )
   .dependsOn(
@@ -77,7 +77,7 @@ lazy val liveTrackingGrpcZIO = (project in file("zio/live-tracking"))
   .settings(
     name := "awa-live-tracking-grpc-zio",
     Dependencies.zioGrpc,
-    zioGrpcSettings,
+    Settings.zioGrpc,
   )
   .dependsOn(
     core    % cctt,

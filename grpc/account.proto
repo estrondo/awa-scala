@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package awa;
+package awa.v1;
 
 service AccountService {
   rpc Authorise(AuthoriseRequest) returns (AuthoriseResponse);
