@@ -23,7 +23,7 @@ object KeyGenerator extends KeyGenerator:
 
   private def generate(random: Random): String =
     val value = random.nextInt() & 0xfffff
-    val str = Integer.toString(value, 32)
+    val str   = for x <- Integer.toString(value, 32) yield if random.nextBoolean() then x.toUpper else x
     if value > 0x7fff then str
     else if value > 0x3ff then s"0$str"
     else if value > 0x1f then s"00$str"

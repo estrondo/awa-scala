@@ -10,9 +10,10 @@
 
 /target/
 /core/target/
-/zio/core/target/
 
-/persistence/postgres/target/
-/service/target/
-/zio/live-tracking/target/
-/zio/account/target/
+/shared/zio/target/
+
+/modules/persistence-postgres/target/
+/modules/service-impl/target/
+/modules/live-tracking-grpc-zio/target/
+/modules/account-grpc-zio/target/
