@@ -1,5 +1,6 @@
 package awa.persistence.postgres
 
+import awa.AwaException
 import io.getquill.*
 import java.sql.SQLException
 import java.sql.Types
@@ -11,10 +12,10 @@ import org.locationtech.jts.io.WKBReader
 import org.locationtech.jts.io.WKBWriter
 import zio.stream.ZStream
 
-type JdbcStream = [T] =>> ZStream[DataSource, SQLException, T]
+type JdbcStream = [T] =>> ZStream[DataSource, AwaException, T]
 
 inline def stIntersects(inline a: Geometry, inline b: Geometry): Boolean = quote {
-  sql"ST_Intersects(${a}, ${b})".as[Boolean]
+  sql"ST_Intersects($a, $b)".as[Boolean]
 }
 
 trait PostgresCodecs[N <: NamingStrategy](val ctx: PostgresZioJdbcContext[N]):

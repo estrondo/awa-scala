@@ -6,6 +6,11 @@ import java.util.concurrent.ThreadLocalRandom
 trait KeyGenerator:
 
   def apply(length: KeyGenerator.Length): String
+  def generateL4(): String  = apply(KeyGenerator.Length.L4)
+  def generateL8(): String  = apply(KeyGenerator.Length.L8)
+  def generateL16(): String = apply(KeyGenerator.Length.L16)
+  def generateL32(): String = apply(KeyGenerator.Length.L32)
+  def generateL64(): String = apply(KeyGenerator.Length.L64)
 
 object KeyGenerator extends KeyGenerator:
   enum Length(val value: Int):

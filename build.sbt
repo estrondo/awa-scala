@@ -1,4 +1,4 @@
-import Awa._
+import Awa.*
 
 ThisBuild / scalaVersion := "3.6.4"
 ThisBuild / organization := "one.estrondo"
@@ -19,26 +19,39 @@ lazy val root = project
   )
   .aggregate(
     `core`,
-    `shared-zio-core`,
+    `shared-logging`,
+    `shared-scalamock`,
     `module-service-impl`,
     `module-persistence-postgres`,
-    `module-live-tracking-grpc-zio`,
-    `module-account-grpc-zio`,
+    `module-account-grpc`,
+    `module-live-tracking-grpc`,
   )
 
 lazy val `core` = (project in file("core"))
   .settings(
     name := "awa-core",
+    Dependencies.zio,
     Dependencies.locationTech,
+    Dependencies.ducktapeTest,
+    Settings.zioTest,
   )
 
-lazy val `shared-zio-core` = (project in file("shared/zio"))
+lazy val `shared-logging` = (project in file("shared/logging"))
   .settings(
-    name := "awa-zio",
-    Dependencies.zio,
+    name := "awa-logging",
   )
   .dependsOn(
-    `core` % cctt,
+    core % cctt,
+  )
+
+lazy val `shared-scalamock` = (project in file("shared/scala-mock"))
+  .settings(
+    name := "awa-shared-scalamock",
+    Dependencies.zio,
+    Dependencies.scalamockWithCompile,
+  )
+  .dependsOn(
+    core % cctt,
   )
 
 lazy val `module-persistence-postgres` = (project in file("modules/persistence-postgres"))
@@ -46,41 +59,40 @@ lazy val `module-persistence-postgres` = (project in file("modules/persistence-p
     name := "awa-persistence-postgres",
     Dependencies.postgresDriver,
     Dependencies.protoQuill,
-    Dependencies.scalaz,
   )
   .dependsOn(
-    `core`            % cctt,
-    `shared-zio-core` % cctt,
+    `core` % cctt,
   )
 
 lazy val `module-service-impl` = (project in file("modules/service-impl"))
   .settings(
     name := "awa-service-impl",
-    Dependencies.scalaz,
+    Dependencies.ducktape,
+    Dependencies.scalaMock,
+    Settings.scalamock,
   )
   .dependsOn(
-    `core`            % cctt,
-    `shared-zio-core` % cctt,
+    `core`             % cctt,
+    `shared-logging`   % cctt,
+    `shared-scalamock` % Test,
   )
 
-lazy val `module-account-grpc-zio` = (project in file("modules/account-grpc-zio"))
+lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
   .settings(
-    name := "awa-account-grpc-zio",
+    name := "awa-account-grpc",
     Settings.zioGrpc,
     Dependencies.zioGrpc,
   )
   .dependsOn(
-    `core`            % cctt,
-    `shared-zio-core` % cctt,
+    `core` % cctt,
   )
 
-lazy val `module-live-tracking-grpc-zio` = (project in file("modules/live-tracking-grpc-zio"))
+lazy val `module-live-tracking-grpc` = (project in file("modules/live-tracking-grpc"))
   .settings(
-    name := "awa-live-tracking-grpc-zio",
+    name := "awa-live-tracking-grpc",
     Dependencies.zioGrpc,
     Settings.zioGrpc,
   )
   .dependsOn(
-    `core`            % cctt,
-    `shared-zio-core` % cctt,
+    `core` % cctt,
   )

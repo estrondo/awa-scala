@@ -12,5 +12,5 @@ case class TrackSegment(
     segment: LineString,
     positionData: LineStringData,
     tagMap: TagMap,
-    order: Int,
+    order: Option[Int],
 )

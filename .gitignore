@@ -11,9 +11,13 @@
 /target/
 /core/target/
 
+/libraries/f/target/
+
 /shared/zio/target/
+/shared/logging/target/
+/shared/scala-mock/target/
 
 /modules/persistence-postgres/target/
 /modules/service-impl/target/
-/modules/live-tracking-grpc-zio/target/
-/modules/account-grpc-zio/target/
+/modules/account-grpc/target/
+/modules/live-tracking-grpc/target/
