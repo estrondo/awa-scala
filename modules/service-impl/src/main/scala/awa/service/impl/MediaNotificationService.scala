@@ -3,7 +3,7 @@ package awa.service.impl
 import awa.AwaException
 import awa.MediaNotification
 import awa.input.LiveTrackInput
-import awa.input.TrackInput
+import awa.input.LiveTrackSegmentInput
 import awa.persistence.MediaNotificationRepository
 import awa.service.MediaNotificationService
 import scalaz.MonadError
@@ -15,10 +15,10 @@ object MediaNotificationService:
       M: MonadError[M, AwaException],
   ): MediaNotificationService[M] =
     new MediaNotificationService[M]:
-      override def search(track: LiveTrackInput): M[MediaNotification] =
+      override def search(track: LiveTrackSegmentInput): M[MediaNotification] =
         for track <- prepareQuery(track)
         yield track
 
-      override def search(track: TrackInput): M[MediaNotification] = ???
+      override def search(track: LiveTrackInput): M[MediaNotification] = ???
 
-      private def prepareQuery(track: LiveTrackInput): M[Nothing] = ???
+      private def prepareQuery(track: LiveTrackSegmentInput): M[Nothing] = ???

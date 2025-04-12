@@ -7,9 +7,8 @@ service LiveTrackService {
 }
 
 message LiveTrackRequest {
-  // client generated id.
-  string id = 1;
-  // user id.
+  // client generated trace_id.
+  string trace_id = 1;
   string account_id = 2;
   // used for filtering.
   map<string, string> tags = 3;
@@ -52,7 +51,7 @@ message LiveTrackPosition {
 }
 
 message LiveTrackResponse {
-  string request_id = 1;
+  string trace_id = 1;
   oneof content {
     LiveTrackSuccess success = 2;
     LiveTrackError error = 3;

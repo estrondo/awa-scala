@@ -1,12 +1,12 @@
-package awa.input
+package awa.model
 
-import awa.model.Account
 import java.time.ZonedDateTime
 
-case class LiveTrackInput(
-    traceId: String,
+case class Track(
+    id: String,
     account: Account,
     startedAt: ZonedDateTime,
     deviceId: Option[String],
     deviceType: Option[String],
+    createdAt: ZonedDateTime,
 )

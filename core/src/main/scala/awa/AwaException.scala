@@ -1,6 +1,7 @@
 package awa
 
-abstract class AwaException(message: String, cause: Throwable = null) extends RuntimeException(message, cause, false, false)
+abstract class AwaException(message: String, cause: Throwable = null)
+    extends RuntimeException(message, cause, false, false)
 
 object AwaException:
 
