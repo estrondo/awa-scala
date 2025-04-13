@@ -1,6 +1,9 @@
-package awa.data
+package awa.testing.data
 
-import awa.Fixture
+import awa.data.PositionData
+import awa.data.PositionData
+import awa.testing.Fixture
+
 import scala.util.Random
 
 object PositionDataFixture extends Fixture:

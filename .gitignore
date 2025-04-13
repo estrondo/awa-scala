@@ -15,7 +15,9 @@
 
 /shared/zio/target/
 /shared/logging/target/
-/shared/scala-mock/target/
+
+/shared-testing/core/target/
+/shared-testing/scalamock/target/
 
 /modules/persistence-postgres/target/
 /modules/service-impl/target/

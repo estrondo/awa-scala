@@ -1,7 +1,8 @@
-package awa
+package awa.testing
+
+import zio.test.ZIOSpecDefault
 
 import scala.reflect.ClassTag
-import zio.test.ZIOSpecDefault
 
 abstract class Spec extends ZIOSpecDefault:
 

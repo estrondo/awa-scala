@@ -1,7 +1,8 @@
-package awa.model
+package awa.testing.model
 
-import awa.Fixture
 import awa.input.LiveTrackInput
+import awa.model.Track
+import awa.testing.Fixture
 import io.github.arainko.ducktape.*
 import scala.util.Random
 

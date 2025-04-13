@@ -1,4 +1,4 @@
-package awa
+package awa.testing
 
 import java.time.Clock
 import java.time.ZonedDateTime

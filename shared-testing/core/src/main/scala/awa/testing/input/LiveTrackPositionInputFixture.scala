@@ -1,8 +1,10 @@
-package awa.input
+package awa.testing.input
 
-import awa.Fixture
-import awa.data.PositionDataFixture
-import awa.data.TagMapFixture
+import awa.input.LiveTrackPositionInput
+import awa.input.LiveTrackPositionInput
+import awa.testing.Fixture
+import awa.testing.data.PositionDataFixture
+import awa.testing.data.TagMapFixture
 
 import scala.util.Random
 

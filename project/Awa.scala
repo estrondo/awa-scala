@@ -26,6 +26,11 @@ object Awa {
       "dev.zio" %% "zio-test-sbt" % Version.zio % Test,
     )
 
+    val zioTestWithCompile = declare(
+      "dev.zio" %% "zio-test"     % Version.zio,
+      "dev.zio" %% "zio-test-sbt" % Version.zio,
+    )
+
     val postgresDriver = declare(
       "org.postgresql" % "postgresql" % Version.postgresDriver,
     )
@@ -46,10 +51,6 @@ object Awa {
 
     val ducktape = declare(
       "io.github.arainko" %% "ducktape" % Version.ducktape,
-    )
-
-    val ducktapeTest = declare(
-      "io.github.arainko" %% "ducktape" % Version.ducktape % Test,
     )
 
     val scalaMock = declare(

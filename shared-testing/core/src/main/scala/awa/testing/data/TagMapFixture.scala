@@ -1,6 +1,8 @@
-package awa.data
+package awa.testing.data
 
-import awa.Fixture
+import awa.data.TagMap
+import awa.testing.Fixture
+
 import scala.util.Random
 
 object TagMapFixture extends Fixture:

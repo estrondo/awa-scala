@@ -1,10 +1,11 @@
-package awa.model
+package awa.testing.model
 
-import awa.Fixture
-import awa.data.LineStringDataFixture
-import awa.data.LineStringFixture
-import awa.data.TagMapFixture
 import awa.input.LiveTrackSegmentInput
+import awa.model.TrackSegment
+import awa.testing.Fixture
+import awa.testing.data.LineStringDataFixture
+import awa.testing.data.LineStringFixture
+import awa.testing.data.TagMapFixture
 import io.github.arainko.ducktape.*
 import scala.util.Random
 

@@ -1,8 +1,7 @@
-package awa.model
+package awa.testing.model
 
-import awa.Fixture
 import awa.model.Account
-
+import awa.testing.Fixture
 import scala.util.Random
 
 object AccountFixture extends Fixture:

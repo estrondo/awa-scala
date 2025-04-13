@@ -1,6 +1,9 @@
-package awa.input
+package awa.testing.input
 
-import awa.Fixture
+import awa.input.LiveTrackInput
+import awa.input.LiveTrackInput
+import awa.testing.Fixture
+
 import scala.util.Random
 
 object LiveTrackInputFixture extends Fixture:

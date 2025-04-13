@@ -1,4 +1,4 @@
-import Awa.*
+import Awa._
 
 ThisBuild / scalaVersion := "3.6.4"
 ThisBuild / organization := "one.estrondo"
@@ -20,7 +20,6 @@ lazy val root = project
   .aggregate(
     `core`,
     `shared-logging`,
-    `shared-scalamock`,
     `module-service-impl`,
     `module-persistence-postgres`,
     `module-account-grpc`,
@@ -32,7 +31,6 @@ lazy val `core` = (project in file("core"))
     name := "awa-core",
     Dependencies.zio,
     Dependencies.locationTech,
-    Dependencies.ducktapeTest,
     Settings.zioTest,
   )
 
@@ -44,9 +42,20 @@ lazy val `shared-logging` = (project in file("shared/logging"))
     core % cctt,
   )
 
-lazy val `shared-scalamock` = (project in file("shared/scala-mock"))
+lazy val `shared-testing-core` = (project in file("shared-testing/core"))
   .settings(
-    name := "awa-shared-scalamock",
+    name := "awa-shared-testing-core",
+    Dependencies.ducktape,
+    Dependencies.scalamockWithCompile,
+    Dependencies.zioTestWithCompile,
+  )
+  .dependsOn(
+    core % cctt,
+  )
+
+lazy val `shared-testing-scalamock` = (project in file("shared-testing/scalamock"))
+  .settings(
+    name := "awa-shared-testing-scalamock",
     Dependencies.zio,
     Dependencies.scalamockWithCompile,
   )
@@ -72,9 +81,10 @@ lazy val `module-service-impl` = (project in file("modules/service-impl"))
     Settings.scalamock,
   )
   .dependsOn(
-    `core`             % cctt,
-    `shared-logging`   % cctt,
-    `shared-scalamock` % Test,
+    `core`                     % cctt,
+    `shared-logging`           % cctt,
+    `shared-testing-scalamock` % Test,
+    `shared-testing-core`      % Test,
   )
 
 lazy val `module-account-grpc` = (project in file("modules/account-grpc"))

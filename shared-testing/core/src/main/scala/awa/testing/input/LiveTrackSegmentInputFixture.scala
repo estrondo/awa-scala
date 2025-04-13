@@ -1,9 +1,10 @@
-package awa.input
+package awa.testing.input
 
-import awa.Fixture
-import awa.data.LineStringFixture
-import awa.data.PositionDataFixture
-import awa.data.TagMapFixture
+import awa.input.LiveTrackSegmentInput
+import awa.testing.Fixture
+import awa.testing.data.LineStringFixture
+import awa.testing.data.PositionDataFixture
+import awa.testing.data.TagMapFixture
 import scala.util.Random
 
 object LiveTrackSegmentInputFixture extends Fixture:

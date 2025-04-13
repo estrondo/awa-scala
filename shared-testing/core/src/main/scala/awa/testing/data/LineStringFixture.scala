@@ -1,6 +1,6 @@
-package awa.data
+package awa.testing.data
 
-import awa.Fixture
+import awa.testing.Fixture
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.LineString
 import scala.util.Random

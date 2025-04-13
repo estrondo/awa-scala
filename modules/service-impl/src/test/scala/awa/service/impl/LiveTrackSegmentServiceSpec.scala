@@ -1,22 +1,21 @@
 package awa.service.impl
 
-import awa.Spec
 import awa.generator.KeyGenerator
-import awa.input.LiveTrackSegmentInputFixture
-import awa.model.TrackFixture
 import awa.model.TrackSegment
-import awa.model.TrackSegmentFixture
 import awa.persistence.TrackSegmentRepository
 import awa.scalamock.KeyGeneratorZIOStub
-import awa.scalamock.ScalaMockZIO
-import awa.scalamock.ZIOStubsLayer
+import awa.scalamock.ZIOStubBaseOperations
 import awa.service.LiveTrackSegmentService
+import awa.testing.Spec
+import awa.testing.input.LiveTrackSegmentInputFixture
+import awa.testing.model.TrackFixture
+import awa.testing.model.TrackSegmentFixture
 import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
 
-object LiveTrackSegmentServiceSpec extends Spec with KeyGeneratorZIOStub with ZIOStubs with ZIOStubsLayer:
+object LiveTrackSegmentServiceSpec extends Spec with KeyGeneratorZIOStub with ZIOStubs with ZIOStubBaseOperations:
 
   def spec = suite(nameOf[LiveTrackSegmentService])(
     test(s"It should add a ${nameOf[TrackSegment]} into the repository.") {
@@ -33,7 +32,7 @@ object LiveTrackSegmentServiceSpec extends Spec with KeyGeneratorZIOStub with ZI
 
       for
         _      <- stubKeyGeneratorL16(expectedTrackSegmentId)
-        _      <- ScalaMockZIO.stubLayerWithZIO[TrackSegmentRepository].apply { repository =>
+        _      <- stubLayerWithZIO[TrackSegmentRepository].apply { repository =>
                     repository.add.returnsZIO(ZIO.succeed)
                   }
         result <- ZIO.serviceWithZIO[LiveTrackSegmentService](_.add(input, track))
