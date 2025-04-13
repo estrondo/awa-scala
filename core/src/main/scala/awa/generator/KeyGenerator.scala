@@ -28,7 +28,7 @@ object KeyGenerator extends KeyGenerator:
 
   private def generate(random: Random): String =
     val value         = random.nextInt() & 0xfffff
-    var shouldBeUpper = random.nextInt() & 0x1f
+    var shouldBeUpper = random.nextInt()
     val str           =
       for c <- Integer.toString(value, 32)
       yield
