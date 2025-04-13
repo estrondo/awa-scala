@@ -27,8 +27,14 @@ object KeyGenerator extends KeyGenerator:
     builder.result()
 
   private def generate(random: Random): String =
-    val value = random.nextInt() & 0xfffff
-    val str   = for x <- Integer.toString(value, 32) yield if random.nextBoolean() then x.toUpper else x
+    val value         = random.nextInt() & 0xfffff
+    var shouldBeUpper = random.nextInt() & 0x1f
+    val str           =
+      for c <- Integer.toString(value, 32)
+      yield
+        shouldBeUpper = shouldBeUpper >> 1
+        if (shouldBeUpper & 0x1) == 0 then c.toUpper else c
+
     if value > 0x7fff then str
     else if value > 0x3ff then s"0$str"
     else if value > 0x1f then s"00$str"
