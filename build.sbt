@@ -42,9 +42,9 @@ lazy val `shared-logging` = (project in file("shared/logging"))
     core % cctt,
   )
 
-lazy val `shared-testing-core` = (project in file("shared-testing/core"))
+lazy val `shared-test-core` = (project in file("shared-test/core"))
   .settings(
-    name := "awa-shared-testing-core",
+    name := "awa-shared-test-core",
     Dependencies.ducktape,
     Dependencies.scalamockWithCompile,
     Dependencies.zioTestWithCompile,
@@ -53,9 +53,9 @@ lazy val `shared-testing-core` = (project in file("shared-testing/core"))
     core % cctt,
   )
 
-lazy val `shared-testing-scalamock` = (project in file("shared-testing/scalamock"))
+lazy val `shared-test-scalamock` = (project in file("shared-test/scalamock"))
   .settings(
-    name := "awa-shared-testing-scalamock",
+    name := "awa-shared-test-scalamock",
     Dependencies.zio,
     Dependencies.scalamockWithCompile,
   )
@@ -81,10 +81,10 @@ lazy val `module-service-impl` = (project in file("modules/service-impl"))
     Settings.scalamock,
   )
   .dependsOn(
-    `core`                     % cctt,
-    `shared-logging`           % cctt,
-    `shared-testing-scalamock` % Test,
-    `shared-testing-core`      % Test,
+    `core`                  % cctt,
+    `shared-logging`        % cctt,
+    `shared-test-scalamock` % Test,
+    `shared-test-core`      % Test,
   )
 
 lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
