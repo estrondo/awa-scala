@@ -23,10 +23,11 @@ object LiveTrackSegmentService:
         added        <- repository
                           .add(trackSegment)
                           .logError("Unable to add a new segment.")
+        _            <- ZIO.logInfo("TrackSegment was added.")
       yield added
     }.annotated(
       "segment.traceId" -> input.traceId,
-      "track.id"        -> track.id,
+      "track.id"        -> track.id.value,
       "account.id"      -> track.account.id,
     )
 

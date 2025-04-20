@@ -1,0 +1,21 @@
+#!/bin/sh
+
+IMAGE="docker.io/estrondo:awa-test-postgres"
+VERSION="0.0.0"
+
+echo "This script builds a Postgres image ready for testing."
+
+
+if [ ! -f "flyway.tar.gz" ]; then
+  echo "Downloading Flyway..."
+  wget https://download.red-gate.com/maven/release/com/redgate/flyway/flyway-commandline/11.7.2/flyway-commandline-11.7.2-linux-x64.tar.gz -O flyway.tar.gz
+fi
+
+echo "Copying migration scripts..."
+mkdir migration
+rm -rf migration/*
+cp -r ../../modules/persistence-postgres/src/main/resources/db/migration/*.sql migration/
+
+docker build -t "$IMAGE-$VERSION" .
+
+echo "Enjoy your test!"

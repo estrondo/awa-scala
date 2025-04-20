@@ -6,6 +6,11 @@ import awa.generator.TimeGenerator
 import awa.input.LiveTrackInput
 import awa.model.Account
 import awa.model.Track
+import awa.model.data.CreatedAt
+import awa.model.data.DeviceId
+import awa.model.data.DeviceType
+import awa.model.data.StartedAt
+import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.service.LiveTrackService
 import zio.ZIO
@@ -36,12 +41,12 @@ object LiveTrackService:
       ZIO
         .attempt {
           Track(
-            id = keyGenerator.generateL16(),
+            id = TrackId(keyGenerator.generateL16()),
             account = account,
-            startedAt = input.startedAt,
-            deviceId = input.deviceId,
-            deviceType = input.deviceType,
-            createdAt = timeGenerator.now(),
+            startedAt = StartedAt(input.startedAt),
+            deviceId = DeviceId(input.deviceId),
+            deviceType = DeviceType(input.deviceType),
+            createdAt = CreatedAt(timeGenerator.now()),
           )
         }
         .mapErrorToAwa(AwaException.Unexpected("An unexpected erro has occurred.", _))

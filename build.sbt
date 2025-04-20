@@ -31,6 +31,7 @@ lazy val `core` = (project in file("core"))
     name := "awa-core",
     Dependencies.zio,
     Dependencies.locationTech,
+    Dependencies.ducktape,
     Settings.zioTest,
   )
 
@@ -48,6 +49,7 @@ lazy val `shared-test-core` = (project in file("shared-test/core"))
     Dependencies.ducktape,
     Dependencies.scalamockWithCompile,
     Dependencies.zioTestWithCompile,
+    Dependencies.logging,
   )
   .dependsOn(
     core % cctt,
@@ -63,14 +65,29 @@ lazy val `shared-test-scalamock` = (project in file("shared-test/scalamock"))
     core % cctt,
   )
 
+lazy val `shared-test-testcontainers` = (project in file("shared-test/testcontainers"))
+  .settings(
+    name := "awa-shared-test-testcontainers",
+    Dependencies.testcontainers,
+    Dependencies.protoQuill,
+    Dependencies.postgresDriver,
+  )
+  .dependsOn(
+    core % cctt,
+  )
+
 lazy val `module-persistence-postgres` = (project in file("modules/persistence-postgres"))
   .settings(
     name := "awa-persistence-postgres",
     Dependencies.postgresDriver,
     Dependencies.protoQuill,
+    Dependencies.ducktape,
+    Dependencies.logging,
   )
   .dependsOn(
-    `core` % cctt,
+    `core`                       % cctt,
+    `shared-test-core`           % Test,
+    `shared-test-testcontainers` % Test,
   )
 
 lazy val `module-service-impl` = (project in file("modules/service-impl"))
@@ -78,6 +95,7 @@ lazy val `module-service-impl` = (project in file("modules/service-impl"))
     name := "awa-service-impl",
     Dependencies.ducktape,
     Dependencies.scalaMock,
+    Dependencies.logging,
     Settings.scalamock,
   )
   .dependsOn(

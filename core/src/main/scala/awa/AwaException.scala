@@ -8,3 +8,5 @@ object AwaException:
   class NotFound(message: String, cause: Throwable) extends AwaException(message, cause)
 
   class Unexpected(message: String, cause: Throwable) extends AwaException(message, cause)
+
+  class Conversion(message: String, cause: Throwable) extends AwaException(message, cause)

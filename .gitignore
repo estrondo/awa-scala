@@ -18,8 +18,13 @@
 
 /shared-test/core/target/
 /shared-test/scalamock/target/
+/shared-test/testcontainers/target/
 
 /modules/persistence-postgres/target/
 /modules/service-impl/target/
 /modules/account-grpc/target/
 /modules/live-tracking-grpc/target/
+
+
+/docker/postgres-testing/migration/
+/docker/postgres-testing/*.tar.gz

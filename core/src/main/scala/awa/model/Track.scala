@@ -1,12 +1,16 @@
 package awa.model
 
-import java.time.ZonedDateTime
+import awa.model.data.CreatedAt
+import awa.model.data.DeviceId
+import awa.model.data.DeviceType
+import awa.model.data.StartedAt
+import awa.model.data.TrackId
 
 case class Track(
-    id: String,
+    id: TrackId,
     account: Account,
-    startedAt: ZonedDateTime,
-    deviceId: Option[String],
-    deviceType: Option[String],
-    createdAt: ZonedDateTime,
+    startedAt: StartedAt,
+    deviceId: Option[DeviceId],
+    deviceType: Option[DeviceType],
+    createdAt: CreatedAt,
 )

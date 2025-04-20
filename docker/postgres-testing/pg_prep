@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+. /usr/local/bin/docker-entrypoint.sh
+
+case "$1" in
+  init-cluster)
+    echo "Creating PostgreSQL cluster..."
+    docker_setup_env
+    docker_create_db_directories
+    docker_verify_minimum_env
+    ;;
+  start)
+    echo "Starting PostgreSQL..."
+    docker_init_database_dir
+    pg_setup_hba_conf "postgres"
+    postgres &
+    ;;
+  wait)
+    echo "Waiting for PostgreSQL to start..."
+    sleep 5
+    docker_setup_db
+    ;;
+  stop)
+    echo "Stopping PostgreSQL..."
+    docker_temp_server_stop
+    ;;
+  *)
+    echo "Oops!"
+  esac

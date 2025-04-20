@@ -11,7 +11,10 @@ object Awa {
     val protoQuill     = "4.8.6"
     val locationTech   = "1.20.0"
     val ducktape       = "0.2.8"
-    val scalaMock      = "7.3.0"
+    val scalaMock      = "7.3.1"
+    val testcontainers = "1.20.6"
+    val zioLogging     = "2.5.0"
+    val logbackClassic = "1.5.18"
   }
 
   object Dependencies {
@@ -45,7 +48,7 @@ object Awa {
     )
 
     val zioGrpc = declare(
-      "io.grpc"               % "grpc-netty"           % "1.71.0",
+      "io.grpc"               % "grpc-netty"           % "1.72.0",
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
     )
 
@@ -61,6 +64,16 @@ object Awa {
     val scalamockWithCompile = declare(
       "org.scalamock" %% "scalamock"     % Version.scalaMock,
       "org.scalamock" %% "scalamock-zio" % Version.scalaMock,
+    )
+
+    val testcontainers = declare(
+      "org.testcontainers" % "postgresql" % Version.testcontainers,
+    )
+
+    val logging = declare(
+      "dev.zio"       %% "zio-logging"        % Version.zioLogging,
+      "dev.zio"       %% "zio-logging-slf4j2" % Version.zioLogging,
+      "ch.qos.logback" % "logback-classic"    % Version.logbackClassic,
     )
   }
 
