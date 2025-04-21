@@ -7,12 +7,12 @@ extension (gen: AwaGen)
   def randomLiveTrackSegmentInput: Gen[Any, LiveTrackSegmentInput] =
     for
       traceId      <- Gen.stringBounded(0, 32)(Gen.alphaNumericChar)
-      tagMap       <- gen.tagMap(0, 10)(Gen.string, Gen.string)
+      tagMap       <- Gen.mapOf(Gen.string, Gen.string)
       startedAt    <- gen.nowZonedDateTime
       deviceId     <- Gen.option(Gen.string1(Gen.char))
       deviceType   <- Gen.option(Gen.string1(Gen.char))
       segment      <- gen.lineString(-50, -40, -30, -10, 0.0001, 0.001, 10, 1000)
-      positionData <- Gen.listOfN(segment.getNumPoints)(AwaGen.randomPositionData)
+      positionData <- Gen.vectorOf(gen.randomPositionDataInput)
     yield LiveTrackSegmentInput(
       traceId = traceId,
       tagMap = tagMap,
@@ -20,5 +20,5 @@ extension (gen: AwaGen)
       deviceId = deviceId,
       deviceType = deviceType,
       segment = segment,
-      positionData = positionData,
+      segmentData = positionData,
     )

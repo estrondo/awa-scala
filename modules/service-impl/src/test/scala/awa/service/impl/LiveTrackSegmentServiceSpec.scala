@@ -1,12 +1,20 @@
 package awa.service.impl
 
 import awa.generator.KeyGenerator
+import awa.input.PositionDataInput
 import awa.model.TrackSegment
+import awa.model.data.PositionData
+import awa.model.data.Segment
+import awa.model.data.SegmentData
+import awa.model.data.StartedAt
+import awa.model.data.TagMap
+import awa.model.data.TrackSegmentId
 import awa.persistence.TrackSegmentRepository
 import awa.scalamock.KeyGeneratorZIOStub
 import awa.scalamock.ZIOStubBaseOperations
 import awa.service.LiveTrackSegmentService
 import awa.testing.Spec
+import awa.testing.ducktape.DucktapeMap
 import awa.testing.generator.AwaGen
 import awa.testing.generator.randomLiveTrackSegmentInput
 import awa.testing.generator.randomTrack
@@ -28,19 +36,19 @@ object LiveTrackSegmentServiceSpec extends Spec with KeyGeneratorZIOStub with ZI
           expectedId,
           input,
           TrackSegment(
-            id = expectedId,
+            id = TrackSegmentId(expectedId),
             track = track,
-            startedAt = input.startedAt,
-            segment = input.segment,
-            positionData = input.positionData,
-            tagMap = input.tagMap,
+            startedAt = StartedAt(input.startedAt),
+            segment = Segment(input.segment),
+            segmentData = SegmentData(input.segmentData.map(DucktapeMap[PositionDataInput, PositionData])),
+            tagMap = TagMap(input.tagMap),
             order = None,
           ),
         )
 
       check(gen) { (newId, input, expected) =>
         for
-          _      <- stubKeyGeneratorL16(newId)
+          _      <- stubKeyGeneratorL32(newId)
           _      <- stubLayerWithZIO[TrackSegmentRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)
                     }

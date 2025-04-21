@@ -5,6 +5,7 @@ import awa.generator.KeyGenerator
 import awa.input.LiveTrackSegmentInput
 import awa.model.Track
 import awa.model.TrackSegment
+import awa.model.data.TrackSegmentId
 import awa.persistence.TrackSegmentRepository
 import awa.service.LiveTrackSegmentService
 import io.github.arainko.ducktape.*
@@ -37,7 +38,7 @@ object LiveTrackSegmentService:
           input
             .into[TrackSegment]
             .transform(
-              Field.const(_.id, keyGenerator.generateL16()),
+              Field.const(_.id, TrackSegmentId(keyGenerator)),
               Field.const(_.order, None),
               Field.const(_.track, track),
             )

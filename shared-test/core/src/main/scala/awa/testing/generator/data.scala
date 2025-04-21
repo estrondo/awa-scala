@@ -1,14 +1,17 @@
 package awa.testing.generator
 
-import awa.data.PositionData
-import awa.data.TagMap
 import awa.model.data.AccountId
 import awa.model.data.DeviceId
 import awa.model.data.DeviceType
 import awa.model.data.Email
+import awa.model.data.HorizontalAccuracy
 import awa.model.data.IdentityProvider
+import awa.model.data.PositionData
+import awa.model.data.RecordedAt
 import awa.model.data.StartedAt
+import awa.model.data.TagMap
 import awa.model.data.TrackId
+import awa.model.data.VerticalAccuracy
 import java.time.ZonedDateTime
 import zio.test.Gen
 
@@ -44,15 +47,13 @@ extension (gen: AwaGen)
 
   def randomPositionData: Gen[Any, PositionData] =
     for
-      altitude           <- Gen.int(0, 8000)
       recordedAt         <- AwaGen.nowZonedDateTime
       horizontalAccuracy <- Gen.int(1, 60)
-      altitudeAccuracy   <- Gen.int(1, 60)
+      verticalAccuracy   <- Gen.int(1, 60)
     yield PositionData(
-      altitude = altitude,
-      recordedAt = recordedAt,
-      horizontalAccuracy = horizontalAccuracy,
-      altitudeAccuracy = altitudeAccuracy,
+      recordedAt = RecordedAt(recordedAt),
+      horizontalAccuracy = HorizontalAccuracy(horizontalAccuracy),
+      verticalAccuracy = VerticalAccuracy(verticalAccuracy),
     )
 
   def tagMap(kGen: Gen[Any, String], vGen: Gen[Any, String]): Gen[Any, TagMap] =
@@ -60,4 +61,4 @@ extension (gen: AwaGen)
 
   def tagMap(min: Int, max: Int)(kGen: Gen[Any, String], vGen: Gen[Any, String]): Gen[Any, TagMap] =
     for entries <- Gen.chunkOfBounded(min, max)(kGen <*> vGen)
-    yield Map.from(entries)
+    yield TagMap(Map.from(entries))

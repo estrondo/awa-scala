@@ -1,16 +1,14 @@
 package awa.input
 
-import awa.data.PositionData
-import awa.data.TagMap
 import java.time.ZonedDateTime
 import org.locationtech.jts.geom.LineString
 
 case class LiveTrackSegmentInput(
     traceId: String,
-    tagMap: TagMap,
+    tagMap: Map[String, String],
     startedAt: ZonedDateTime,
     deviceId: Option[String],
     deviceType: Option[String],
     segment: LineString,
-    positionData: Seq[PositionData],
+    segmentData: Seq[PositionDataInput],
 )
