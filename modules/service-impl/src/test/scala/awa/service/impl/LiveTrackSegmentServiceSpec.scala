@@ -1,7 +1,6 @@
 package awa.service.impl
 
 import awa.generator.KeyGenerator
-import awa.model.Track
 import awa.model.TrackSegment
 import awa.persistence.TrackSegmentRepository
 import awa.scalamock.KeyGeneratorZIOStub

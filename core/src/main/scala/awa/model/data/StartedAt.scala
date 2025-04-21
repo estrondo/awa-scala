@@ -8,3 +8,5 @@ case class StartedAt(value: ZonedDateTime)
 object StartedAt:
 
   given Transformer[StartedAt, ZonedDateTime] = _.value
+
+  given Transformer[ZonedDateTime, StartedAt] = StartedAt.apply

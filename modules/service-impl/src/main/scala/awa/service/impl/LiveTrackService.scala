@@ -13,6 +13,8 @@ import awa.model.data.StartedAt
 import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.service.LiveTrackService
+import io.github.arainko.ducktape.Field
+import io.github.arainko.ducktape.into
 import zio.ZIO
 
 object LiveTrackService:
@@ -30,23 +32,26 @@ object LiveTrackService:
         added     <- repository
                        .add(converted)
                        .logError("Unable to add track.")
-        _         <- ZIO.logDebug("Track was added.")
+        _         <- ZIO
+                       .logDebug("Track was added.")
+                       .annotated(
+                         "track.id" -> added.id.value,
+                       )
       yield added
     }.annotated(
       "track.traceId" -> track.traceId,
-      "account.id"    -> account.id,
+      "account.id"    -> account.id.value,
     )
 
     private def convert(input: LiveTrackInput, account: Account): IO[Track] =
       ZIO
         .attempt {
-          Track(
-            id = TrackId(keyGenerator.generateL16()),
-            account = account,
-            startedAt = StartedAt(input.startedAt),
-            deviceId = DeviceId(input.deviceId),
-            deviceType = DeviceType(input.deviceType),
-            createdAt = CreatedAt(timeGenerator.now()),
-          )
+          input
+            .into[Track]
+            .transform(
+              Field.const(_.id, TrackId(keyGenerator)),
+              Field.const(_.createdAt, CreatedAt(timeGenerator.now())),
+              Field.const(_.account, account),
+            )
         }
-        .mapErrorToAwa(AwaException.Unexpected("An unexpected erro has occurred.", _))
+        .mapErrorToAwa(AwaException.Conversion("Unable to convert to Track!", _))

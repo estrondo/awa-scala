@@ -30,7 +30,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
     test(s"It should add a ${nameOf[Track]} into the repository.") {
       val gen =
         for
-          expectedId <- AwaGen.keyGeneratorL16
+          expectedId <- AwaGen.keyGeneratorL32
           now        <- AwaGen.nowZonedDateTime
           trackInput <- AwaGen.randomLiveTrackInput
           account    <- AwaGen.randomAccount
@@ -50,7 +50,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
 
       check(gen) { (now, expectedId, input, expectedTrack) =>
         for
-          _      <- stubKeyGeneratorL16(expectedId)
+          _      <- stubKeyGeneratorL32(expectedId)
           _      <- stubLayerWith[TimeGenerator].apply { generator =>
                       (() => generator.now()).returns(now)
                     }

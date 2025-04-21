@@ -38,10 +38,10 @@ object PostgresTrackRepository:
           track
             .into[TrackRow]
             .transform(
-              Field.const(_.accountId, track.account.id),
+              Field.const(_.accountId, track.account.id.value),
             )
         }
-        .mapErrorToAwa(AwaException.Conversion("Unable to convert to TrackRow.", _))
+        .mapErrorToAwa(AwaException.Conversion("Unable to convert to TrackRow!", _))
 
     private def insert(row: TrackRow): Task[Any] =
       run {

@@ -2,38 +2,45 @@ package awa.testing.generator
 
 import awa.data.PositionData
 import awa.data.TagMap
+import awa.model.data.AccountId
 import awa.model.data.DeviceId
 import awa.model.data.DeviceType
+import awa.model.data.Email
+import awa.model.data.IdentityProvider
 import awa.model.data.StartedAt
 import awa.model.data.TrackId
 import java.time.ZonedDateTime
-import scala.annotation.unused
 import zio.test.Gen
 
-extension (@unused awaGen: AwaGen)
+extension (gen: AwaGen)
 
-  def randomEmail: Gen[Any, String] =
+  def randomAccountId: Gen[Any, AccountId] =
+    for value <- gen.keyGeneratorL16 yield AccountId(value)
+
+  def randomEmail: Gen[Any, Email] =
     for
-      user    <- Gen.alphaNumericString
+      user    <- Gen.string
       domain  <- Gen.alphaNumericString
-      country <- Gen.stringN(2)(Gen.alphaNumericChar)
-    yield s"$user@$domain.$country"
+      country <- Gen.stringN(2)(Gen.alphaChar)
+    yield Email(s"$user@$domain.$country")
 
   def randomDeviceType: Gen[Any, DeviceType] =
-    for value <- Gen.stringBounded(3, 10)(Gen.alphaNumericChar)
+    for value <- Gen.stringBounded(1, 16)(Gen.alphaNumericChar)
     yield DeviceType(value)
 
   def randomDeviceId: Gen[Any, DeviceId] =
-    for value <- Gen.stringN(10)(Gen.alphaNumericChar)
+    for value <- Gen.stringBounded(1, 16)(Gen.alphaNumericChar)
     yield DeviceId(value)
+
+  def randomIdentityProvider: Gen[Any, IdentityProvider] =
+    for value <- Gen.alphaNumericString yield IdentityProvider(value)
 
   def startedAt(when: Gen[Any, ZonedDateTime]): Gen[Any, StartedAt] =
     for value <- when
     yield StartedAt(value)
 
   def randomTrackId: Gen[Any, TrackId] =
-    for value <- AwaGen.keyGeneratorL32
-    yield TrackId(value)
+    for value <- gen.keyGeneratorL32 yield TrackId(value)
 
   def randomPositionData: Gen[Any, PositionData] =
     for

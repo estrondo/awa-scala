@@ -12,3 +12,5 @@ object DeviceType:
       case None        => None
 
   given Transformer[DeviceType, String] = _.value
+
+  given Transformer[String, DeviceType] = DeviceType.apply

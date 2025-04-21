@@ -1,6 +1,8 @@
 package awa.persistence.postgres
 
+import awa.generator.KeyGenerator
 import awa.model.Track
+import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.test.testcontainers.Container
 import awa.test.testcontainers.PostgresDataSource

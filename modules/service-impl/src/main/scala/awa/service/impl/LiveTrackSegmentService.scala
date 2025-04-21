@@ -28,7 +28,7 @@ object LiveTrackSegmentService:
     }.annotated(
       "segment.traceId" -> input.traceId,
       "track.id"        -> track.id.value,
-      "account.id"      -> track.account.id,
+      "account.id"      -> track.account.id.value,
     )
 
     private def convert(input: LiveTrackSegmentInput, track: Track): IO[TrackSegment] =
@@ -42,4 +42,4 @@ object LiveTrackSegmentService:
               Field.const(_.track, track),
             )
         }
-        .mapErrorToAwa(AwaException.Unexpected("An expected error has occurred.", _))
+        .mapErrorToAwa(AwaException.Conversion("Unable to convert to TrackSegment!", _))

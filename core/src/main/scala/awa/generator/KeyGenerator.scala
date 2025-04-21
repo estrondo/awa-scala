@@ -1,5 +1,6 @@
 package awa.generator
 
+import java.security.SecureRandom
 import java.util.Random
 import java.util.concurrent.ThreadLocalRandom
 
