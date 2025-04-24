@@ -1,3 +1,8 @@
 package awa.model.data
 
-case class AccountId(value: String)
+opaque type AccountId = String
+
+object AccountId:
+  def apply(value: String): AccountId = value
+
+  extension (value: AccountId) def value: String = value

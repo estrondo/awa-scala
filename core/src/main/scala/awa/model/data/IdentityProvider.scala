@@ -1,3 +1,7 @@
 package awa.model.data
 
-case class IdentityProvider(value: String)
+opaque type IdentityProvider = String
+
+object IdentityProvider:
+  def apply(value: String): IdentityProvider            = value
+  extension (value: IdentityProvider) def value: String = value

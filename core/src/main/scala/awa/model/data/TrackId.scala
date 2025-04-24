@@ -3,11 +3,14 @@ package awa.model.data
 import awa.generator.KeyGenerator
 import io.github.arainko.ducktape.Transformer
 
-case class TrackId(value: String):
-  require(value.nonEmpty)
+opaque type TrackId = String
 
 object TrackId:
+  def apply(value: String): TrackId = value
 
-  given Transformer[TrackId, String] = _.value
+  def apply(keyGenerator: KeyGenerator): TrackId = keyGenerator.generateL32()
 
-  def apply(keyGenerator: KeyGenerator): TrackId = new TrackId(keyGenerator.generateL32())
+  extension (value: TrackId) def value: String = value
+
+  given Transformer[TrackId, String] with
+    override def transform(value: TrackId): String = value

@@ -1,3 +1,7 @@
 package awa.model.data
 
-case class VerticalAccuracy(value: Int)
+opaque type VerticalAccuracy = Int
+
+object VerticalAccuracy:
+
+  def apply(value: Int): VerticalAccuracy = value

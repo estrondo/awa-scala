@@ -2,15 +2,19 @@ package awa.model.data
 
 import io.github.arainko.ducktape.Transformer
 
-case class DeviceType(value: String)
+opaque type DeviceType = String
 
 object DeviceType:
 
+  def apply(value: String): DeviceType = value
+
   def apply(option: Option[String]): Option[DeviceType] =
     option match
-      case Some(value) => Some(DeviceType(value))
+      case Some(value) => Some(value)
       case None        => None
 
-  given Transformer[DeviceType, String] = _.value
+  given Transformer[String, DeviceType] with
+    override def transform(value: String): DeviceType = value
 
-  given Transformer[String, DeviceType] = DeviceType.apply
+  given Transformer[DeviceType, String] with
+    override def transform(value: DeviceType): String = value

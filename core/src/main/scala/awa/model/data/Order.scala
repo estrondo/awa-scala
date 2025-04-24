@@ -1,3 +1,7 @@
 package awa.model.data
 
-case class Order(value: Int)
+opaque type Order = Int
+
+object Order:
+  def apply(value: Int): Order            = value
+  extension (value: Order) def value: Int = value

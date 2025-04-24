@@ -1,3 +1,7 @@
 package awa.model.data
 
-case class HorizontalAccuracy(value: Int)
+opaque type HorizontalAccuracy = Int
+
+object HorizontalAccuracy:
+  def apply(value: Int): HorizontalAccuracy            = value
+  extension (value: HorizontalAccuracy) def value: Int = value
