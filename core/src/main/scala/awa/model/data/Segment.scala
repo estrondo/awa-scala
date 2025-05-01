@@ -11,3 +11,5 @@ object Segment:
 
   given Transformer[LineString, Segment] with
     override def transform(value: LineString): Segment = value
+
+  extension (segment: Segment) inline def value: LineString = segment

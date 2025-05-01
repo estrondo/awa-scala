@@ -4,9 +4,6 @@ import awa.generator.KeyGenerator
 import awa.generator.TimeGenerator
 import awa.model.Track
 import awa.model.data.CreatedAt
-import awa.model.data.DeviceId
-import awa.model.data.DeviceType
-import awa.model.data.StartedAt
 import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.scalamock.KeyGeneratorZIOStub
@@ -16,7 +13,7 @@ import awa.service.impl
 import awa.testing
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomAccount
+import awa.testing.generator.randomAccountId
 import awa.testing.generator.randomLiveTrackInput
 import java.time.ZonedDateTime
 import org.scalamock.stubs.ZIOStubs
@@ -33,17 +30,17 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
           expectedId <- AwaGen.keyGeneratorL32
           now        <- AwaGen.nowZonedDateTime
           trackInput <- AwaGen.randomLiveTrackInput
-          account    <- AwaGen.randomAccount
+          accountId  <- AwaGen.randomAccountId
         yield (
           now,
           expectedId,
           trackInput,
           Track(
             id = TrackId(expectedId),
-            account = account,
-            startedAt = StartedAt(trackInput.startedAt),
-            deviceId = DeviceId(trackInput.deviceId),
-            deviceType = DeviceType(trackInput.deviceType),
+            accountId = accountId,
+            startedAt = trackInput.startedAt,
+            deviceId = trackInput.deviceId,
+            deviceType = trackInput.deviceType,
             createdAt = CreatedAt(now),
           ),
         )
@@ -57,7 +54,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
           _      <- stubLayerWithZIO[TrackRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)
                     }
-          result <- ZIO.serviceWithZIO[LiveTrackService](_.add(input, expectedTrack.account))
+          result <- ZIO.serviceWithZIO[LiveTrackService](_.add(input, expectedTrack.accountId))
         yield assertTrue(
           result == expectedTrack,
         )

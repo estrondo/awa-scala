@@ -1,18 +1,19 @@
 package awa.testing.generator
 
 import awa.input.LiveTrackInput
+import awa.model.data.StartedAt
 import zio.test.Gen
 
 extension (gen: AwaGen)
   def randomLiveTrackInput: Gen[Any, LiveTrackInput] =
     for
-      traceId    <- gen.keyGeneratorL32
+      traceId    <- gen.randomTraceId
       started    <- gen.nowZonedDateTime
-      deviceId   <- Gen.option(Gen.stringN(10)(Gen.alphaNumericChar))
-      deviceType <- Gen.option(Gen.stringN(16)(Gen.alphaNumericChar))
+      deviceId   <- Gen.option(gen.randomDeviceId)
+      deviceType <- Gen.option(gen.randomDeviceType)
     yield LiveTrackInput(
       traceId = traceId,
-      startedAt = started,
+      startedAt = StartedAt(started),
       deviceId = deviceId,
       deviceType = deviceType,
     )

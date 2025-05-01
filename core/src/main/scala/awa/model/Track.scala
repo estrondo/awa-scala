@@ -1,5 +1,6 @@
 package awa.model
 
+import awa.model.data.AccountId
 import awa.model.data.CreatedAt
 import awa.model.data.DeviceId
 import awa.model.data.DeviceType
@@ -8,7 +9,7 @@ import awa.model.data.TrackId
 
 case class Track(
     id: TrackId,
-    account: Account,
+    accountId: AccountId,
     startedAt: StartedAt,
     deviceId: Option[DeviceId],
     deviceType: Option[DeviceType],

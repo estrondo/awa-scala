@@ -8,6 +8,9 @@
 /project/target/
 
 
+*.semanticdb
+
+
 /target/
 /core/target/
 
@@ -15,6 +18,9 @@
 
 /shared/zio/target/
 /shared/logging/target/
+/shared/grpc/target/
+/shared/ducktape/target/
+shared/gt-crs/target/
 
 /shared-test/core/target/
 /shared-test/scalamock/target/

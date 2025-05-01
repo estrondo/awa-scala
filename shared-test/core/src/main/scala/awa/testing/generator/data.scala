@@ -6,12 +6,19 @@ import awa.model.data.DeviceType
 import awa.model.data.Email
 import awa.model.data.HorizontalAccuracy
 import awa.model.data.IdentityProvider
+import awa.model.data.Order
 import awa.model.data.PositionData
 import awa.model.data.RecordedAt
+import awa.model.data.Segment
+import awa.model.data.SegmentData
 import awa.model.data.StartedAt
 import awa.model.data.TagMap
+import awa.model.data.Token
+import awa.model.data.TraceId
 import awa.model.data.TrackId
+import awa.model.data.TrackSegmentId
 import awa.model.data.VerticalAccuracy
+import awa.testing.generator.lineString
 import java.time.ZonedDateTime
 import zio.test.Gen
 
@@ -42,6 +49,9 @@ extension (gen: AwaGen)
     for value <- when
     yield StartedAt(value)
 
+  def randomTraceId: Gen[Any, TraceId] =
+    for value <- Gen.alphaNumericStringBounded(1, 10) yield TraceId(value)
+
   def randomTrackId: Gen[Any, TrackId] =
     for value <- gen.keyGeneratorL32 yield TrackId(value)
 
@@ -56,9 +66,27 @@ extension (gen: AwaGen)
       verticalAccuracy = VerticalAccuracy(verticalAccuracy),
     )
 
+  def randomSegmentData: Gen[Any, SegmentData] =
+    for values <- Gen.vectorOf(gen.randomPositionData) yield SegmentData(values)
+
+  def randomSegment(min: Int, max: Int): Gen[Any, Segment] =
+    for value <- gen.lineString(0.000001, 0.00001, min, max) yield Segment(value)
+
   def tagMap(kGen: Gen[Any, String], vGen: Gen[Any, String]): Gen[Any, TagMap] =
-    tagMap(0, Int.MaxValue)(kGen, vGen)
+    tagMap(0, 20)(kGen, vGen)
 
   def tagMap(min: Int, max: Int)(kGen: Gen[Any, String], vGen: Gen[Any, String]): Gen[Any, TagMap] =
     for entries <- Gen.chunkOfBounded(min, max)(kGen <*> vGen)
     yield TagMap(Map.from(entries))
+
+  def startedAtNow: Gen[Any, StartedAt] =
+    for now <- gen.nowZonedDateTime yield StartedAt(now)
+
+  def randomToken: Gen[Any, Token] =
+    for bytes <- Gen.chunkOfBounded(1, 256)(Gen.byte) yield Token(bytes.toArray)
+
+  def randomTrackSegmentId: Gen[Any, TrackSegmentId] =
+    for value <- gen.keyGeneratorL32 yield TrackSegmentId(value)
+
+  def randomOrder: Gen[Any, Order] =
+    for value <- Gen.int(0, 100) yield Order(value)

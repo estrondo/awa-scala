@@ -4,6 +4,10 @@ import sbtprotoc.ProtocPlugin.autoImport.PB
 
 object Awa {
 
+  object Repositories {
+    val osgeo = resolvers += "osgeo" at "https://repo.osgeo.org/repository/release"
+  }
+
   object Version {
     val awa            = "1.0.0"
     val zio            = "2.1.17"
@@ -15,6 +19,7 @@ object Awa {
     val testcontainers = "1.20.6"
     val zioLogging     = "2.5.0"
     val logbackClassic = "1.5.18"
+    val gt             = "32.2"
   }
 
   object Dependencies {
@@ -74,6 +79,11 @@ object Awa {
       "dev.zio"       %% "zio-logging"        % Version.zioLogging,
       "dev.zio"       %% "zio-logging-slf4j2" % Version.zioLogging,
       "ch.qos.logback" % "logback-classic"    % Version.logbackClassic,
+    )
+
+    val gtCrs = declare(
+      "org.geotools" % "gt-main"  % Version.gt exclude ("javax.media", "jai_core"),
+      "javax.media"  % "jai_core" % "1.1.3" from "https://repo.osgeo.org/repository/release/javax/media/jai_core/1.1.3/jai_core-1.1.3.jar",
     )
   }
 

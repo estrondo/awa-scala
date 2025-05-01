@@ -35,9 +35,36 @@ lazy val `core` = (project in file("core"))
     Settings.zioTest,
   )
 
+lazy val `shared-grpc` = (project in file("shared/grpc"))
+  .settings(
+    name := "awa-shared-grpc",
+    Dependencies.zioGrpc,
+  )
+  .dependsOn(
+    core % cctt,
+  )
+
 lazy val `shared-logging` = (project in file("shared/logging"))
   .settings(
     name := "awa-logging",
+  )
+  .dependsOn(
+    core % cctt,
+  )
+
+lazy val `shared-ducktape` = (project in file("shared/ducktape"))
+  .settings(
+    name := "awa-shared-ducktape",
+  )
+  .dependsOn(
+    core % cctt,
+  )
+
+lazy val `shared-gt-crs` = (project in file("shared/gt-crs"))
+  .settings(
+    name := "awa-shared-gt-crs",
+    Repositories.osgeo,
+    Dependencies.gtCrs,
   )
   .dependsOn(
     core % cctt,
@@ -112,7 +139,9 @@ lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
     Dependencies.zioGrpc,
   )
   .dependsOn(
-    `core` % cctt,
+    `core`            % cctt,
+    `shared-grpc`     % cctt,
+    `shared-ducktape` % cctt,
   )
 
 lazy val `module-live-tracking-grpc` = (project in file("modules/live-tracking-grpc"))
@@ -122,5 +151,10 @@ lazy val `module-live-tracking-grpc` = (project in file("modules/live-tracking-g
     Settings.zioGrpc,
   )
   .dependsOn(
-    `core` % cctt,
+    `core`                  % cctt,
+    `shared-grpc`           % cctt,
+    `shared-ducktape`       % cctt,
+    `shared-gt-crs`         % cctt,
+    `shared-test-core`      % Test,
+    `shared-test-scalamock` % Test,
   )

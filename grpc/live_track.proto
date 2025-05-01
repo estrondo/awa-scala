@@ -4,7 +4,8 @@ package awa.v1;
 
 service LiveTrackService {
   rpc Create(CreateLiveTrackRequest) returns (CreateLiveTrackResponse);
-  rpc Record(stream LiveTrackRequest) returns (stream LiveTrackResponse);
+  rpc Track(stream LiveTrackRequest) returns (stream LiveTrackResponse);
+  rpc Statistics(StatisticsRequest) returns (StatisticsResponse);
 }
 
 message CreateLiveTrackRequest {
@@ -30,6 +31,10 @@ message LiveTrackCreated {
 message LiveTrackRequest {
   // client generated trace_id.
   string trace_id = 1;
+
+  // track id created earlier.
+  string track_id = 2;
+
   // used for filtering.
   map<string, string> tags = 3;
   // timestamp in seconds.
@@ -40,6 +45,9 @@ message LiveTrackRequest {
   string device_type = 6;
   string firmware_version = 7;
 
+  // classify what's happening.
+  Flag flag = 10;
+
   oneof content {
     LiveTrackSegment segment = 8;
     LiveTrackPosition position = 9;
@@ -47,17 +55,16 @@ message LiveTrackRequest {
 }
 
 message LiveTrackSegment {
-  int32 length = 1;
   // BigEndian
   // for each point:
   // [float (32 bits): lon]
   // [float (32 bits): lat]
   // [unsigned short (16 bits): altitude - 20000 in meters]
+  // [6 bits: reserved]
   // [unsigned 10 bits: time_offset in seconds]
   // [unsigned byte (8 bits): horizontal accuracy in meters]
   // [unsigned byte (8 bits): altitude accuracy in meters]
-  // [6 bits: reserved]
-  bytes data = 3;
+  repeated bytes data = 1;
 }
 
 message LiveTrackPosition {
@@ -67,7 +74,14 @@ message LiveTrackPosition {
   // [unsigned short (16 bits): altitude - 20000 in meters]
   // [unsigned byte (8 bits): horizontal accuracy in meters]
   // [unsigned byte (8 bits): altitude accuracy in meters]
-  bytes data = 2;
+  bytes data = 1;
+}
+
+enum Flag {
+  UNKNOWN = 0;
+  STARTING = 1;
+  RESUMING = 2;
+  STOPPING = 3;
 }
 
 message LiveTrackResponse {
@@ -79,36 +93,27 @@ message LiveTrackResponse {
 }
 
 message LiveTrackError {
-  // The error type.
-  string type = 1;
+  // the error code is alphanumeric.
+  string code = 1;
   // An summary of the error.
   string message = 2;
-  // the error code is alphanumeric.
-  string code = 3;
 
   // additional data.
-  map<string, string> details = 4;
+  map<string, string> details = 3;
 }
 
 message LiveTrackSuccess {
-  repeated Notification notification = 1;
-  repeated TotemNotification totem_notification = 2;
+  // the number of positions which were tracked.
+  int32 num_positions = 1;
+  // the total length of the track in meters.
+  int64 length = 2;
 }
 
-message TotemNotification {
-  string id = 1;
-  string title = 2;
-  string summary = 3;
-  string theme_color = 4;
-  string icon_url = 5;
-  float lon = 6;
-  float lat = 7;
-  int32 altitude = 8;
+message StatisticsRequest {
+  string trace_id = 1;
+  
 }
 
-message Notification {
-  string id = 1;
-  string title = 2;
-  string summary = 3;
-  string theme_color = 4;
+message StatisticsResponse {
+  string trace_id = 1;
 }

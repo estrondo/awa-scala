@@ -8,6 +8,8 @@ object DeviceId:
 
   def apply(value: String): DeviceId = value
 
+  extension (value: DeviceId) def value: String = value
+
   def apply(option: Option[String]): Option[DeviceId] =
     option match
       case Some(value) => Some(value)

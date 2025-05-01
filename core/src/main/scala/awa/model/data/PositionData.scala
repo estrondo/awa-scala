@@ -1,7 +1,7 @@
 package awa.model.data
 
-import awa.input.PositionDataInput
 import io.github.arainko.ducktape.Transformer
+import java.time.ZonedDateTime
 
 case class PositionData(
     recordedAt: RecordedAt,
@@ -11,8 +11,8 @@ case class PositionData(
 
 object PositionData:
 
-  given Transformer[PositionDataInput, PositionData] with
-    override def transform(value: PositionDataInput): PositionData =
+  given single: Transformer[(ZonedDateTime, Int, Int), PositionData] with
+    override def transform(value: (ZonedDateTime, Int, Int)): PositionData =
       PositionData(
         recordedAt = RecordedAt(value._1),
         horizontalAccuracy = HorizontalAccuracy(value._2),

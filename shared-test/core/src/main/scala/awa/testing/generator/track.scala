@@ -11,14 +11,14 @@ extension (@unused awaGen: AwaGen)
   def randomTrack: Gen[Any, Track] =
     for
       trackId       <- AwaGen.randomTrackId
-      account       <- AwaGen.randomAccount
+      accountId     <- AwaGen.randomAccountId
       startedAt     <- AwaGen.nowZonedDateTime
       deviceId      <- Gen.option(AwaGen.randomDeviceId)
       deviceType    <- Gen.option(AwaGen.randomDeviceType)
       startedBefore <- Gen.int(60, 90)
     yield Track(
       id = trackId,
-      account = account,
+      accountId = accountId,
       startedAt = StartedAt(startedAt),
       deviceId = deviceId,
       deviceType = deviceType,

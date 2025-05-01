@@ -1,10 +1,13 @@
 package awa.input
 
-import java.time.ZonedDateTime
+import awa.model.data.DeviceId
+import awa.model.data.DeviceType
+import awa.model.data.StartedAt
+import awa.model.data.TraceId
 
 case class LiveTrackInput(
-    traceId: String,
-    startedAt: ZonedDateTime,
-    deviceId: Option[String],
-    deviceType: Option[String],
+    traceId: TraceId,
+    startedAt: StartedAt,
+    deviceId: Option[DeviceId],
+    deviceType: Option[DeviceType],
 )

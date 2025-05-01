@@ -14,3 +14,6 @@ object TrackId:
 
   given Transformer[TrackId, String] with
     override def transform(value: TrackId): String = value
+
+  given Transformer[String, TrackId] with
+    override def transform(value: String): TrackId = value

@@ -38,7 +38,7 @@ object PostgresTrackRepository:
           track
             .into[TrackRow]
             .transform(
-              Field.const(_.accountId, track.account.id.value),
+              Field.const(_.accountId, track.accountId.value),
             )
         }
         .mapErrorToAwa(AwaException.Conversion("Unable to convert to TrackRow!", _))

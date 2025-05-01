@@ -1,11 +1,11 @@
 package awa.testing.generator
 
-import awa.input.PositionDataInput
-import awa.model.data.PositionData
 import zio.test.Gen
 
+import java.time.ZonedDateTime
+
 extension (gen: AwaGen)
-  def randomPositionDataInput: Gen[Any, PositionDataInput] =
+  def randomPositionDataInput: Gen[Any, (ZonedDateTime, Int, Int)] =
     for
       recordedAt         <- gen.nowZonedDateTime
       horizontalAccuracy <- Gen.int(0, 100)

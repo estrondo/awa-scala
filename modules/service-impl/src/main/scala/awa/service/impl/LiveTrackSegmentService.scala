@@ -27,9 +27,9 @@ object LiveTrackSegmentService:
         _            <- ZIO.logInfo("TrackSegment was added.")
       yield added
     }.annotated(
-      "segment.traceId" -> input.traceId,
+      "segment.traceId" -> input.traceId.value,
       "track.id"        -> track.id.value,
-      "account.id"      -> track.account.id.value,
+      "account.id"      -> track.accountId.value,
     )
 
     private def convert(input: LiveTrackSegmentInput, track: Track): IO[TrackSegment] =
