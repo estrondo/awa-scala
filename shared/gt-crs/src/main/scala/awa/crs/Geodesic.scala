@@ -5,7 +5,7 @@ import org.geotools.referencing.GeodeticCalculator
 
 object Geodesic:
 
-  def length(segment: Segment): Long =
+  def length(segment: Segment): Int =
     // I wanted to use a classic old while here!
     val calculator  = GeodeticCalculator(geoCentricCoordinateReferenceSystem)
     val coordinates = segment.value.getCoordinateSequence
@@ -23,4 +23,4 @@ object Geodesic:
         previous = current
         index += 1
 
-    length.toLong
+    length.toInt

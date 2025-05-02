@@ -106,7 +106,7 @@ message LiveTrackSuccess {
   // the number of positions which were tracked.
   int32 num_positions = 1;
   // the total length of the track in meters.
-  int64 length = 2;
+  int32 length = 2;
 }
 
 message StatisticsRequest {

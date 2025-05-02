@@ -31,7 +31,7 @@ import zio.test.*
 
 object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
 
-  def spec = suite(nameOf[ZLiveTrackService[Authorisation]])(
+  def spec = suite(nameOf[LiveTrackingService])(
     test("It should create a new track") {
       val gen =
         for
