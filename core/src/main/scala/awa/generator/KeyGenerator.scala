@@ -33,7 +33,7 @@ object KeyGenerator extends KeyGenerator:
       for c <- Integer.toString(value, 32)
       yield
         shouldBeUpper = shouldBeUpper >> 1
-        if (shouldBeUpper & 0x1) == 0 then c.toUpper else c
+        if (shouldBeUpper & 0x1) == 1 then c.toUpper else c
 
     if value > 0x7fff then str
     else if value > 0x3ff then s"0$str"

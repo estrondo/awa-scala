@@ -15,3 +15,6 @@ abstract class Spec extends ZIOSpecDefault:
 
   protected def nameOf[T: ClassTag]: String =
     (summon[ClassTag[T]].runtimeClass.getSimpleName: String).replaceAll("""\$+""", "")
+
+  protected def typeOf(value: AnyRef): String =
+    value.getClass().getSimpleName().replaceAll("""\$+""", "")
