@@ -1,8 +1,8 @@
 package awa.persistence
 
-import awa.IO
+import awa.F
 import awa.model.Track
 
 trait TrackRepository:
 
-  def add(track: Track): IO[Track]
+  def add(track: Track): F[Track]

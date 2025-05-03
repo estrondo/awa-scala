@@ -1,6 +1,6 @@
 package awa.service
 
-import awa.IO
+import awa.F
 import awa.input.LiveTrackInput
 import awa.input.LiveTrackPositionInput
 import awa.input.LiveTrackSegmentInput
@@ -11,8 +11,8 @@ import awa.model.data.AccountId
 
 trait LiveTrackService:
 
-  def add(input: LiveTrackInput, accountId: AccountId): IO[Track]
+  def add(input: LiveTrackInput, accountId: AccountId): F[Track]
 
-  def track(input: LiveTrackSegmentInput, accountId: AccountId): IO[TrackSegment]
+  def track(input: LiveTrackSegmentInput, accountId: AccountId): F[TrackSegment]
 
-  def track(input: LiveTrackPositionInput, accountId: AccountId): IO[TrackPosition]
+  def track(input: LiveTrackPositionInput, accountId: AccountId): F[TrackPosition]

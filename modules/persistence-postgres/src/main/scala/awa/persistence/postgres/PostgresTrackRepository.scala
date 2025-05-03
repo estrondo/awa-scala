@@ -1,7 +1,7 @@
 package awa.persistence.postgres
 
 import awa.AwaException
-import awa.IO
+import awa.F
 import awa.mapErrorToAwa
 import awa.model.Track
 import awa.persistence.TrackRepository
@@ -15,7 +15,7 @@ import zio.ZLayer
 
 object PostgresTrackRepository:
 
-  def apply(ctx: PostgresZioJdbcContext[SnakeCase], dataSource: IO[DataSource]): TrackRepository = new TrackRepository:
+  def apply(ctx: PostgresZioJdbcContext[SnakeCase], dataSource: F[DataSource]): TrackRepository = new TrackRepository:
 
     private val layer = ZLayer(dataSource)
 
@@ -25,14 +25,14 @@ object PostgresTrackRepository:
       querySchema[TrackRow]("track")
     }
 
-    override def add(track: Track): IO[Track] =
+    override def add(track: Track): F[Track] =
       for
         row <- convert(track)
         _   <- insert(row)
                  .mapErrorToAwa(AwaException.Unexpected("", _))
       yield track
 
-    private def convert(track: Track): IO[TrackRow] =
+    private def convert(track: Track): F[TrackRow] =
       ZIO
         .attempt {
           track

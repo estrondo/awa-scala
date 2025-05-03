@@ -1,7 +1,7 @@
 package awa.grpc.v1.livetracking
 
 import awa.AwaException
-import awa.EA
+import awa.EF
 import awa.crs.Geodesic
 import awa.ducktape.TransformTo
 import awa.ducktape.fallible.DeviceIdValidator
@@ -53,7 +53,6 @@ import io.grpc.StatusException
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.LineString
 import scala.annotation.unused
-import zio.Exit
 import zio.IO
 import zio.ZIO
 import zio.stream.Stream
@@ -117,7 +116,7 @@ object LiveTrackingService:
 
       private def convertToTrackInput(
           request: LiveTrackRequest,
-      ): EA[LiveTrackError, LiveTrackSegmentInput | LiveTrackPositionInput] =
+      ): EF[LiveTrackError, LiveTrackSegmentInput | LiveTrackPositionInput] =
         request.content match {
           case Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
           case Content.Position(value) => convertToLiveTrackPositionInput(value, request)
@@ -127,7 +126,7 @@ object LiveTrackingService:
       private def convertToLiveTrackSegmentInput(
           value: LiveTrackSegment,
           request: LiveTrackRequest,
-      ): EA[LiveTrackError, LiveTrackSegmentInput] =
+      ): EF[LiveTrackError, LiveTrackSegmentInput] =
         ZIO
           .fromEither {
             val now                              = timeGenerator.now()
@@ -172,7 +171,7 @@ object LiveTrackingService:
       private def convertToLiveTrackPositionInput(
           value: LiveTrackPosition,
           request: LiveTrackRequest,
-      ): EA[LiveTrackError, LiveTrackPositionInput] =
+      ): EF[LiveTrackError, LiveTrackPositionInput] =
         ZIO
           .fromEither {
 
@@ -215,10 +214,10 @@ object LiveTrackingService:
       private def convertToLiveTrackSuccess(@unused track: TrackPosition): LiveTrackSuccess =
         LiveTrackSuccess(numPositions = 1)
 
-      private def reportEmptyLiveTrackRequest(@unused request: LiveTrackRequest): EA[LiveTrackError, Nothing] =
+      private def reportEmptyLiveTrackRequest(@unused request: LiveTrackRequest): EF[LiveTrackError, Nothing] =
         ZIO.fail(LiveTrackError(code = EmptyTracking))
 
-      private def convertToLiveTrackInput(request: CreateLiveTrackRequest): EA[LiveTrackError, LiveTrackInput] =
+      private def convertToLiveTrackInput(request: CreateLiveTrackRequest): EF[LiveTrackError, LiveTrackInput] =
         ZIO
           .fromEither {
             val now = timeGenerator.now()

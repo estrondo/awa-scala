@@ -17,7 +17,7 @@ object LiveTrackSegmentService:
       keyGenerator: KeyGenerator,
       repository: TrackSegmentRepository,
   ): LiveTrackSegmentService = new LiveTrackSegmentService:
-    override def add(input: LiveTrackSegmentInput, track: Track): IO[TrackSegment] = {
+    override def add(input: LiveTrackSegmentInput, track: Track): F[TrackSegment] = {
       for
         trackSegment <- convert(input, track)
                           .logError("Unable to convert the input.")
@@ -32,7 +32,7 @@ object LiveTrackSegmentService:
       "account.id"      -> track.accountId.value,
     )
 
-    private def convert(input: LiveTrackSegmentInput, track: Track): IO[TrackSegment] =
+    private def convert(input: LiveTrackSegmentInput, track: Track): F[TrackSegment] =
       ZIO
         .attempt {
           input

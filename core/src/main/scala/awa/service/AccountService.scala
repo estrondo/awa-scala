@@ -1,9 +1,9 @@
 package awa.service
 
-import awa.IO
+import awa.F
 import awa.model.Account
 import awa.model.data.AccountId
 
 trait AccountService:
 
-  def find(accountId: AccountId): IO[Option[Account]]
+  def find(accountId: AccountId): F[Option[Account]]

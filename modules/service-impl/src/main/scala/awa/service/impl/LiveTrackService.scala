@@ -26,7 +26,7 @@ object LiveTrackService:
       repository: TrackRepository,
   ): LiveTrackService = new LiveTrackService:
 
-    override def add(input: LiveTrackInput, accountId: AccountId): IO[Track] = {
+    override def add(input: LiveTrackInput, accountId: AccountId): F[Track] = {
       for
         converted <- convert(input, accountId)
                        .logError("Unable to convert the input.")
@@ -40,11 +40,11 @@ object LiveTrackService:
       "accountId" -> accountId.value,
     )
 
-    override def track(input: LiveTrackPositionInput, accountId: AccountId): IO[TrackPosition] = ???
+    override def track(input: LiveTrackPositionInput, accountId: AccountId): F[TrackPosition] = ???
 
-    override def track(input: LiveTrackSegmentInput, accountId: AccountId): IO[TrackSegment] = ???
+    override def track(input: LiveTrackSegmentInput, accountId: AccountId): F[TrackSegment] = ???
 
-    private def convert(input: LiveTrackInput, accountId: AccountId): IO[Track] =
+    private def convert(input: LiveTrackInput, accountId: AccountId): F[Track] =
       ZIO
         .attempt {
           input
