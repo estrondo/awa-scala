@@ -1,6 +1,6 @@
 package awa
 
-import awa.input.validation.FailureNote
+import awa.validation.FailureNote
 
 abstract class AwaException(message: String, cause: Throwable = null)
     extends RuntimeException(message, cause, false, false)

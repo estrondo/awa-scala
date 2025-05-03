@@ -2,8 +2,6 @@ package awa.grpc.v1.livetracking
 
 import awa.ducktape.TransformTo
 import awa.grpc.protocol.GrpcZonedDateTimeProtocol
-import awa.input.validation.FailureNote
-import awa.input.validation.Valid
 import awa.model.data.HorizontalAccuracy
 import awa.model.data.Position
 import awa.model.data.PositionData
@@ -12,6 +10,8 @@ import awa.model.data.Segment
 import awa.model.data.SegmentData
 import awa.model.data.VerticalAccuracy
 import awa.v1.livetrack.LiveTrackRequest
+import awa.validation.FailureNote
+import awa.validation.Valid
 import com.google.protobuf.ByteString
 import java.io.DataInputStream
 import org.locationtech.jts.geom.Coordinate

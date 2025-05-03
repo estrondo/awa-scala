@@ -1,6 +1,6 @@
 package awa.ducktape
 
-import awa.input.validation.FailureNote
+import awa.validation.FailureNote
 import io.github.arainko.ducktape.Mode
 
 //noinspection ScalaFileName

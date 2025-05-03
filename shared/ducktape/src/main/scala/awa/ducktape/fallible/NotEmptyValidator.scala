@@ -1,7 +1,7 @@
 package awa.ducktape.fallible
 
-import awa.input.validation.FailureNote
-import awa.input.validation.Valid
+import awa.validation.FailureNote
+import awa.validation.Valid
 import awa.typeclass.IsEmpty
 import io.github.arainko.ducktape.Transformer
 

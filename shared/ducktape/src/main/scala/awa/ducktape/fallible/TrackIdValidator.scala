@@ -1,8 +1,8 @@
 package awa.ducktape.fallible
 
 import awa.ducktape.TransformTo
-import awa.input.validation.FailureNote
-import awa.input.validation.Valid
+import awa.validation.FailureNote
+import awa.validation.Valid
 import awa.model.data.TrackId
 
 object TrackIdValidator:
