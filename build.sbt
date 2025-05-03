@@ -19,11 +19,17 @@ lazy val root = project
   )
   .aggregate(
     `core`,
-    `shared-logging`,
     `module-service-impl`,
     `module-persistence-postgres`,
     `module-account-grpc`,
     `module-live-tracking-grpc`,
+    `shared-ducktape`,
+    `shared-logging`,
+    `shared-grpc`,
+    `shared-gt-crs`,
+    `shared-test-core`,
+    `shared-test-scalamock`,
+    `shared-test-testcontainers`,
   )
 
 lazy val `core` = (project in file("core"))

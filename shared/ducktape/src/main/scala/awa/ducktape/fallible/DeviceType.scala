@@ -1,9 +1,9 @@
 package awa.ducktape.fallible
 
-import awa.validation.FailureNote
 import awa.model.data.DeviceType
-import io.github.arainko.ducktape.Transformer
+import awa.validation.FailureNote
 import awa.validation.Valid
+import io.github.arainko.ducktape.Transformer
 
 object DeviceTypeValidator:
 

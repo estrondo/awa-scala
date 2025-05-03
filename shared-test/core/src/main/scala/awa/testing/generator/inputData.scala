@@ -1,8 +1,7 @@
 package awa.testing.generator
 
-import zio.test.Gen
-
 import java.time.ZonedDateTime
+import zio.test.Gen
 
 extension (gen: AwaGen)
   def randomPositionDataInput: Gen[Any, (ZonedDateTime, Int, Int)] =

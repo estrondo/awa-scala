@@ -1,9 +1,9 @@
 package awa.ducktape.fallible
 
-import awa.validation.FailureNote
-import awa.validation.Valid
 import awa.model.data.StartedAt
 import awa.typeclass.CompareTo
+import awa.validation.FailureNote
+import awa.validation.Valid
 import io.github.arainko.ducktape.Transformer
 import java.time.ZonedDateTime
 

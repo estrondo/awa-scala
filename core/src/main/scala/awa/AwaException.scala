@@ -13,10 +13,10 @@ object AwaException:
 
   class Conversion(message: String, cause: Throwable) extends AwaException(message, cause)
 
-  class WithFailureNote(message: String, val failures: Seq[FailureNote]) extends AwaException(message):
+  class WithNotes(message: String, val notes: Seq[FailureNote]) extends AwaException(message):
 
     override def getMessage(): String =
       val buiilder = StringBuilder()
       buiilder.addAll(super.getMessage())
-      for note <- failures do buiilder.addAll(s"\n${note.note}: ${note.description}")
+      for note <- notes do buiilder.addAll(s"\n${note.note}: ${note.description}")
       buiilder.result()

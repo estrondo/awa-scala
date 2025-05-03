@@ -39,7 +39,7 @@ extension (gen: AwaGen)
   ): Gen[Any, LineString] =
 
     require(pMin > 1)
-    require(pMax > pMin)
+    require(pMax >= pMin)
 
     def genCoordinate(angle: Double, step: Double, x: Double, y: Double): Gen[Any, (Double, Coordinate)] =
       for r <- Gen.double(rMin, rMax)

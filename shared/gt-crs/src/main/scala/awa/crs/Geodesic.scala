@@ -10,7 +10,7 @@ object Geodesic:
     val calculator  = GeodeticCalculator(geoCentricCoordinateReferenceSystem)
     val coordinates = segment.value.getCoordinateSequence
     val maxIndex    = coordinates.size()
-    var length      = 0D
+    var length      = 0d
 
     if maxIndex > 0 then
       var previous = coordinates.getCoordinate(0)

@@ -1,8 +1,8 @@
 package awa.ducktape.fallible
 
+import awa.typeclass.IsEmpty
 import awa.validation.FailureNote
 import awa.validation.Valid
-import awa.typeclass.IsEmpty
 import io.github.arainko.ducktape.Transformer
 
 object NotEmptyValidator:

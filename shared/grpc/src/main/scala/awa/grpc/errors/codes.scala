@@ -1,6 +1,6 @@
 package awa.grpc.errors
 
-val UnexpectedError     = "unexpected-error"
+val UnexpectedError = "unexpected-error"
 
 val InvalidCreateTrackRequest = "invalid-create-track-request"
 

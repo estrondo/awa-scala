@@ -8,7 +8,9 @@ object SegmentData:
 
   def apply(value: Seq[PositionData]): SegmentData = value
 
-  extension (value: SegmentData) def value: Seq[PositionData] = value
+  extension (value: SegmentData)
+    def length: Int              = value.length
+    def value: Seq[PositionData] = value
 
   given [C[X] <: IterableOnce[X]]: Transformer[C[PositionData], SegmentData] with
     override def transform(value: C[PositionData]): SegmentData = value.toSeq

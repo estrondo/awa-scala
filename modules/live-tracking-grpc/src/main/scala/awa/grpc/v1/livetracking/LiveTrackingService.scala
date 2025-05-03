@@ -35,6 +35,7 @@ import awa.model.data.TrackId
 import awa.service.LiveTrackService
 import awa.v1.livetrack.CreateLiveTrackRequest
 import awa.v1.livetrack.CreateLiveTrackResponse
+import awa.v1.livetrack.ErrorNote
 import awa.v1.livetrack.LiveTrackCreated
 import awa.v1.livetrack.LiveTrackError
 import awa.v1.livetrack.LiveTrackPosition
@@ -52,6 +53,7 @@ import io.grpc.StatusException
 import org.locationtech.jts.geom.GeometryFactory
 import org.locationtech.jts.geom.LineString
 import scala.annotation.unused
+import zio.Exit
 import zio.IO
 import zio.ZIO
 import zio.stream.Stream
@@ -114,12 +116,12 @@ object LiveTrackingService:
       ): IO[StatusException, StatisticsResponse] = ???
 
       private def convertToTrackInput(
-          item: LiveTrackRequest,
+          request: LiveTrackRequest,
       ): EA[LiveTrackError, LiveTrackSegmentInput | LiveTrackPositionInput] =
-        item.content match {
-          case Content.Segment(value)  => convertToLiveTrackSegmentInput(value, item)
-          case Content.Position(value) => convertToLiveTrackPositionInput(value, item)
-          case Content.Empty           => reportEmptyLiveTrackRequest(item)
+        request.content match {
+          case Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
+          case Content.Position(value) => convertToLiveTrackPositionInput(value, request)
+          case Content.Empty           => reportEmptyLiveTrackRequest(request)
         }
 
       private def convertToLiveTrackSegmentInput(
@@ -130,7 +132,7 @@ object LiveTrackingService:
           .fromEither {
             val now                              = timeGenerator.now()
             val (validSegment, validSegmentData) =
-              LiveTrackingProtocol.extractTrackSegmentData("data", "data")(value.data, request)
+              LiveTrackingProtocol.extractSegment("segment", "segmentData")(value.data, request)
 
             request
               .into[LiveTrackSegmentInput]
@@ -140,17 +142,29 @@ object LiveTrackingService:
                   _.traceId,
                   NotEmptyValidator[TraceId]("traceId", "It must be not empty.")(request.traceId),
                 ),
-                Field.fallibleConst(_.segment, validSegment),
-                Field.fallibleConst(_.segmentData, validSegmentData),
+                Field.fallibleConst(
+                  _.segment,
+                  validSegment,
+                ),
+                Field.fallibleConst(
+                  _.segmentData,
+                  validSegmentData,
+                ),
                 Field.fallibleConst(
                   _.startedAt,
                   StartedAtValidator.notAfter("startedAt", now)(request.timestamp),
                 ),
-                Field.fallibleConst(_.trackId, TrackIdValidator.validate("trackId")(request.trackId)),
-                Field.const(_.tagMap, TransformTo[TagMap](request.tags)),
+                Field.fallibleConst(
+                  _.trackId,
+                  TrackIdValidator.validate("trackId")(request.trackId),
+                ),
+                Field.const(
+                  _.tagMap,
+                  TransformTo[TagMap](request.tags),
+                ),
               )
               .left
-              .map(AwaException.WithFailureNote("Invalid LiveTrackSegment.", _))
+              .map(AwaException.WithNotes("Invalid LiveTrackSegment.", _))
           }
           .logWarn("Unable to convert the LiveTrackSegmentInput.")
           .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
@@ -164,21 +178,30 @@ object LiveTrackingService:
 
             val now                            = timeGenerator.now()
             val (valPosition, valPositionData) =
-              LiveTrackingProtocol.extractPositionData("position", "positionData")(value.data, request)
+              LiveTrackingProtocol.extractPosition("position", "positionData")(value.data, request)
             request
               .into[LiveTrackPositionInput]
               .fallible
               .transform(
-                Field.fallibleConst(_.positionData, valPositionData),
-                Field.fallibleConst(_.point, valPosition),
+                Field.fallibleConst(
+                  _.positionData,
+                  valPositionData,
+                ),
+                Field.fallibleConst(
+                  _.point,
+                  valPosition,
+                ),
                 Field.fallibleConst(
                   _.startedAt,
                   StartedAtValidator.notAfter("startedAt", now)(request.timestamp),
                 ),
-                Field.const(_.tagMap, TransformTo[TagMap](request.tags)),
+                Field.const(
+                  _.tagMap,
+                  TransformTo[TagMap](request.tags),
+                ),
               )
               .left
-              .map(AwaException.WithFailureNote("", _))
+              .map(AwaException.WithNotes("", _))
           }
           .logWarn("Unable to convert to LiveTrackPositionInput.")
           .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
@@ -217,9 +240,9 @@ object LiveTrackingService:
                 ),
               )
               .left
-              .map(AwaException.WithFailureNote("Invalid CreateLiveTrackRequest.", _))
+              .map(AwaException.WithNotes("Invalid CreateLiveTrackRequest.", _))
           }
-          .logWarn("Unable to converto to LiveTrackInput.")
+          .logWarn("Unable to convert to LiveTrackInput.")
           .mapError(convertToLiveTrackError(InvalidCreateTrackRequest))
 
       private def convertToLiveTrackCreated(track: Track): LiveTrackCreated =
@@ -231,13 +254,13 @@ object LiveTrackingService:
 
       private def convertToLiveTrackError(code: String)(cause: AwaException): LiveTrackError =
         cause match
-          case withFailureTip: AwaException.WithFailureNote =>
+          case withNotes: AwaException.WithNotes =>
             LiveTrackError(
               code = code,
               message = cause.getMessage,
-              details = Map.from(for tip <- withFailureTip.failures yield (tip.note, tip.description)),
+              notes = for note <- withNotes.notes yield ErrorNote(note.note, note.description),
             )
-          case _                                            =>
+          case _                                 =>
             LiveTrackError(
               code = code,
               message = cause.getMessage,
