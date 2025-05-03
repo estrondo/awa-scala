@@ -1,12 +1,21 @@
-CREATE SCHEMA IF NOT EXISTS awa;
+create extension if not exists postgis;
 
-CREATE TABLE IF NOT EXISTS awa.track (
-    id VARCHAR(32),
-    account_id VARCHAR(16),
-    device_id VARCHAR(16),
-    device_type VARCHAR(16),
-    started_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE,
-    PRIMARY KEY (id)
+create schema if not exists awa;
+
+create table if not exists awa.track (
+    id varchar(32) primary key,
+    account_id varchar(32) not null,
+    device_id varchar(16) not null,
+    device_type varchar(16) not null,
+    started_at timestamp with time zone not null,
+    created_at timestamp with time zone not null
 );
 
+create table if not exists awa.track_segment (
+    id varchar(32) primary key,
+    track_id varchar(32) not null,
+    segment geometry(linestringz, 4326) not null,
+    started_at timestamp with time zone not null,
+    created_at timestamp with time zone not null,
+    ord smallint not null
+);

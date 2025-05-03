@@ -29,4 +29,7 @@ object PostgresDataSource:
       ZIO.serviceWith[DataSource](ZIO.succeed(_))
     }
 
+  val dataSourceAsZLayer: ZLayer[DataSource, Throwable, ZLayer[Any, AwaException, DataSource]] =
+    ZLayer.fromFunction((ds: DataSource) => ZLayer.succeed(ds))
+
   val zioContext: ULayer[PostgresZioJdbcContext[SnakeCase]] = ZLayer.succeed(PostgresZioJdbcContext(SnakeCase))

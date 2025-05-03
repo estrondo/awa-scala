@@ -13,10 +13,8 @@ extension [R, E, A](self: ZIO[R, E, A])
   inline def annotated(inline annotations: (String, String)*): ZIO[R, E, A] =
     self @@ ZIOAspect.annotated(annotations*)
 
-  inline def mapErrorToAwa(inline f: Throwable => AwaException)(using
-      inline e: E <:< Throwable,
-  ): ZIO[R, AwaException, A] =
-    self.mapError(x => f(e(x)))
+  inline def mapErrorToAwa(inline f: E => AwaException): ZIO[R, AwaException, A] =
+    self.mapError(x => f(x))
 
   inline def logDebug(inline message: => String): ZIO[R, E, A] =
     self.tap(_ => ZIO.logDebug(message))

@@ -30,22 +30,24 @@ object LiveTrackSegmentServiceSpec extends Spec with KeyGeneratorZIOStub with ZI
           input,
           TrackSegment(
             id = TrackSegmentId(expectedId),
-            track = track,
+            trackId = track.id,
             startedAt = input.startedAt,
             segment = input.segment,
             segmentData = input.segmentData,
             tagMap = input.tagMap,
+            createdAt = None,
             order = None,
           ),
+          track,
         )
 
-      check(gen) { (newId, input, expected) =>
+      check(gen) { (newId, input, expected, track) =>
         for
           _      <- stubKeyGeneratorL32(newId)
           _      <- stubLayerWithZIO[TrackSegmentRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)
                     }
-          result <- ZIO.serviceWithZIO[LiveTrackSegmentService](_.add(input, expected.track))
+          result <- ZIO.serviceWithZIO[LiveTrackSegmentService](_.add(input, track))
         yield assertTrue(
           result == expected,
         )

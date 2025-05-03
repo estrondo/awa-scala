@@ -1,4 +1,4 @@
-FROM docker.io/postgres:17-alpine
+FROM docker.io/postgis/postgis:17-3.5-alpine
 
 ENV POSTGRES_PASSWORD=awa \
   POSTGRES_USER=awa POSTGRES_DB=awa-test

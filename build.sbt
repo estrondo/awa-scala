@@ -121,6 +121,8 @@ lazy val `module-persistence-postgres` = (project in file("modules/persistence-p
     `core`                       % cctt,
     `shared-test-core`           % Test,
     `shared-test-testcontainers` % Test,
+    `shared-test-scalamock`      % Test,
+    `shared-ducktape`            % cctt,
   )
 
 lazy val `module-service-impl` = (project in file("modules/service-impl"))

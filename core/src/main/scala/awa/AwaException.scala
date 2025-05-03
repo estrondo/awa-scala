@@ -13,6 +13,8 @@ object AwaException:
 
   class Conversion(message: String, cause: Throwable) extends AwaException(message, cause)
 
+  class InsertionFailure(message: String, cause: Throwable) extends AwaException(message, cause)
+
   class WithNotes(message: String, val notes: Seq[FailureNote]) extends AwaException(message):
 
     override def getMessage(): String =

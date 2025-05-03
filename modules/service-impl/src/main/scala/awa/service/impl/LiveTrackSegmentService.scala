@@ -40,7 +40,8 @@ object LiveTrackSegmentService:
             .transform(
               Field.const(_.id, TrackSegmentId(keyGenerator)),
               Field.const(_.order, None),
-              Field.const(_.track, track),
+              Field.const(_.trackId, track.id),
+              Field.const(_.createdAt, None),
             )
         }
         .mapErrorToAwa(AwaException.Conversion("Unable to convert to TrackSegment!", _))

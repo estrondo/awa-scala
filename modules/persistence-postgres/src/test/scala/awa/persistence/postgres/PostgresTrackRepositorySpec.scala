@@ -9,6 +9,7 @@ import awa.testing.generator.AwaGen
 import awa.testing.generator.randomTrack
 import io.getquill.PostgresZioJdbcContext
 import io.getquill.SnakeCase
+import javax.sql.DataSource
 import zio.Scope
 import zio.ZIO
 import zio.ZLayer
@@ -28,7 +29,7 @@ object PostgresTrackRepositorySpec extends Spec:
   ).provideSome[Scope](
     Container.postgresContainer,
     PostgresDataSource.fromPostgresContainer,
-    PostgresDataSource.dataSourceAsZIO,
+    PostgresDataSource.dataSourceAsZLayer,
     PostgresDataSource.zioContext,
     ZLayer.fromFunction(PostgresTrackRepository.apply),
   ) @@ TestAspect.sequential

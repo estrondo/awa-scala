@@ -2,6 +2,7 @@ package awa.persistence.postgres
 
 import awa.AwaException
 import awa.F
+import awa.L
 import awa.mapErrorToAwa
 import awa.model.Track
 import awa.persistence.TrackRepository
@@ -11,13 +12,10 @@ import io.github.arainko.ducktape.*
 import javax.sql.DataSource
 import zio.Task
 import zio.ZIO
-import zio.ZLayer
 
 object PostgresTrackRepository:
 
-  def apply(ctx: PostgresZioJdbcContext[SnakeCase], dataSource: F[DataSource]): TrackRepository = new TrackRepository:
-
-    private val layer = ZLayer(dataSource)
+  def apply(ctx: PostgresZioJdbcContext[SnakeCase], layer: L[DataSource]): TrackRepository = new TrackRepository:
 
     import ctx.*
 

@@ -7,6 +7,8 @@ import zio.logging.backend.SLF4J
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
 import zio.test.testEnvironment
+import org.locationtech.jts.geom.GeometryFactory
+import awa.UL
 
 abstract class Spec extends ZIOSpecDefault:
 
@@ -18,3 +20,8 @@ abstract class Spec extends ZIOSpecDefault:
 
   protected def typeOf(value: AnyRef): String =
     value.getClass().getSimpleName().replaceAll("""\$+""", "")
+
+
+  protected val geometryFactoryLayer: UL[GeometryFactory] = 
+    val geometryFactory = GeometryFactory()
+    ZLayer.succeed(geometryFactory)
