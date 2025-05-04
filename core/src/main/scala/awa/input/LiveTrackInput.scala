@@ -8,6 +8,6 @@ import awa.model.data.TraceId
 case class LiveTrackInput(
     traceId: TraceId,
     startedAt: StartedAt,
-    deviceId: Option[DeviceId],
-    deviceType: Option[DeviceType],
+    deviceId: DeviceId,
+    deviceType: DeviceType,
 )

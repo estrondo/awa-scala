@@ -11,7 +11,7 @@ case class Track(
     id: TrackId,
     accountId: AccountId,
     startedAt: StartedAt,
-    deviceId: Option[DeviceId],
-    deviceType: Option[DeviceType],
+    deviceId: DeviceId,
+    deviceType: DeviceType,
     createdAt: CreatedAt,
 )

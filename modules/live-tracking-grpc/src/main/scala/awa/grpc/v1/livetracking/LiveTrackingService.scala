@@ -4,8 +4,6 @@ import awa.AwaException
 import awa.EF
 import awa.crs.Geodesic
 import awa.ducktape.TransformTo
-import awa.ducktape.fallible.DeviceIdValidator
-import awa.ducktape.fallible.DeviceTypeValidator
 import awa.ducktape.fallible.NotEmptyValidator
 import awa.ducktape.fallible.StartedAtValidator
 import awa.ducktape.fallible.TrackIdValidator
@@ -231,11 +229,11 @@ object LiveTrackingService:
                 ),
                 Field.fallibleConst(
                   _.deviceId,
-                  DeviceIdValidator.notEmpty("deviceId", "Device Id must be informed.")(request.deviceId),
+                  NotEmptyValidator[DeviceId]("deviceId", "Device Id must be informed.")(request.deviceId),
                 ),
                 Field.fallibleConst(
                   _.deviceType,
-                  DeviceTypeValidator.notEmpty("deviceType", "Device Type must be informed.")(request.deviceType),
+                  NotEmptyValidator[DeviceType]("deviceType", "Device Type must be informed.")(request.deviceType),
                 ),
               )
               .left

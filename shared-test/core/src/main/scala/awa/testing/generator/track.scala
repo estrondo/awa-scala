@@ -13,8 +13,8 @@ extension (@unused awaGen: AwaGen)
       trackId       <- AwaGen.randomTrackId
       accountId     <- AwaGen.randomAccountId
       startedAt     <- AwaGen.nowZonedDateTime
-      deviceId      <- Gen.option(AwaGen.randomDeviceId)
-      deviceType    <- Gen.option(AwaGen.randomDeviceType)
+      deviceId      <- AwaGen.randomDeviceId
+      deviceType    <- AwaGen.randomDeviceType
       startedBefore <- Gen.int(60, 90)
     yield Track(
       id = trackId,

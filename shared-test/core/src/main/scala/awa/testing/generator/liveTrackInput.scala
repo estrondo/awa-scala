@@ -9,8 +9,8 @@ extension (gen: AwaGen)
     for
       traceId    <- gen.randomTraceId
       started    <- gen.nowZonedDateTime
-      deviceId   <- Gen.option(gen.randomDeviceId)
-      deviceType <- Gen.option(gen.randomDeviceType)
+      deviceId   <- gen.randomDeviceId
+      deviceType <- gen.randomDeviceType
     yield LiveTrackInput(
       traceId = traceId,
       startedAt = StartedAt(started),
