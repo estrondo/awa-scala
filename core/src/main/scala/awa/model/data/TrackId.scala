@@ -1,19 +1,28 @@
 package awa.model.data
 
-import awa.generator.KeyGenerator
+import awa.generator.IdGenerator
+import awa.typeclass.ToShow
 import io.github.arainko.ducktape.Transformer
+import java.util.UUID
+import java.util as ju
 
-opaque type TrackId = String
+opaque type TrackId = UUID
 
 object TrackId:
-  def apply(value: String): TrackId = value
+  def apply(value: UUID): TrackId = value
 
-  def apply(keyGenerator: KeyGenerator): TrackId = keyGenerator.generateL32()
+  def apply(idGenerator: IdGenerator): TrackId = idGenerator.generate()
 
-  extension (value: TrackId) def value: String = value
+  extension (value: TrackId) def value: UUID = value
+
+  given Transformer[TrackId, UUID] with
+    override def transform(value: TrackId): UUID = value
+
+  given Transformer[UUID, TrackId] with
+    override def transform(value: UUID): TrackId = value
 
   given Transformer[TrackId, String] with
-    override def transform(value: TrackId): String = value
+    override def transform(value: TrackId): String = value.toString()
 
-  given Transformer[String, TrackId] with
-    override def transform(value: String): TrackId = value
+  given ToShow[TrackId] with
+    override def show(a: TrackId): String = a.toString()

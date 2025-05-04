@@ -4,9 +4,9 @@ import awa.AwaException
 import awa.EF
 import awa.crs.Geodesic
 import awa.ducktape.TransformTo
+import awa.ducktape.fallible.IdValidator
 import awa.ducktape.fallible.NotEmptyValidator
 import awa.ducktape.fallible.StartedAtValidator
-import awa.ducktape.fallible.TrackIdValidator
 import awa.ducktape.given
 import awa.generator.TimeGenerator
 import awa.grpc.GrpcIO
@@ -137,7 +137,7 @@ object LiveTrackingService:
               .transform(
                 Field.fallibleConst(
                   _.traceId,
-                  NotEmptyValidator[TraceId]("traceId", "It must be not empty.")(request.traceId),
+                  IdValidator[TraceId]("traceId", "It must be not empty.")(request.traceId),
                 ),
                 Field.fallibleConst(
                   _.segment,
@@ -153,7 +153,7 @@ object LiveTrackingService:
                 ),
                 Field.fallibleConst(
                   _.trackId,
-                  TrackIdValidator.validate("trackId")(request.trackId),
+                  IdValidator[TrackId]("trackId", "")(request.trackId),
                 ),
                 Field.const(
                   _.tagMap,
@@ -180,6 +180,10 @@ object LiveTrackingService:
               .into[LiveTrackPositionInput]
               .fallible
               .transform(
+                Field.fallibleConst(
+                  _.traceId,
+                  IdValidator[TraceId]("traceId")(request.traceId),
+                ),
                 Field.fallibleConst(
                   _.positionData,
                   valPositionData,
@@ -223,6 +227,10 @@ object LiveTrackingService:
               .into[LiveTrackInput]
               .fallible
               .transform(
+                Field.fallibleConst(
+                  _.traceId,
+                  IdValidator[TraceId]("traceId")(request.traceId),
+                ),
                 Field.fallibleConst(
                   _.startedAt,
                   StartedAtValidator.notAfter("startedAt", now)(request.timestamp),

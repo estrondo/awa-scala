@@ -25,7 +25,7 @@ import zio.test.Gen
 extension (gen: AwaGen)
 
   def randomAccountId: Gen[Any, AccountId] =
-    for value <- gen.keyGeneratorL16 yield AccountId(value)
+    for value <- gen.generateId yield AccountId(value)
 
   def randomEmail: Gen[Any, Email] =
     for
@@ -50,10 +50,10 @@ extension (gen: AwaGen)
     yield StartedAt(value)
 
   def randomTraceId: Gen[Any, TraceId] =
-    for value <- Gen.alphaNumericStringBounded(1, 10) yield TraceId(value)
+    for value <- Gen.uuid yield TraceId(value)
 
   def randomTrackId: Gen[Any, TrackId] =
-    for value <- gen.keyGeneratorL32 yield TrackId(value)
+    for value <- gen.generateId yield TrackId(value)
 
   def randomPositionData: Gen[Any, PositionData] =
     for
@@ -86,7 +86,7 @@ extension (gen: AwaGen)
     for bytes <- Gen.chunkOfBounded(1, 256)(Gen.byte) yield Token(bytes.toArray)
 
   def randomTrackSegmentId: Gen[Any, TrackSegmentId] =
-    for value <- gen.keyGeneratorL32 yield TrackSegmentId(value)
+    for value <- gen.generateId yield TrackSegmentId(value)
 
   def randomOrder: Gen[Any, Order] =
     for value <- Gen.int(0, 100) yield Order(value)

@@ -1,9 +1,10 @@
 package awa.testing.generator
 
-import awa.generator.KeyGenerator
+import awa.generator.IdGenerator
 import java.time.Clock
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 import zio.ZIO
 import zio.test.Gen
 
@@ -18,16 +19,7 @@ class AwaGen:
       }
     }
 
-  val keyGeneratorL16: Gen[Any, String] =
+  val generateId: Gen[Any, UUID] =
     Gen.fromZIO {
-      ZIO.succeed {
-        KeyGenerator.generateL16()
-      }
-    }
-
-  val keyGeneratorL32: Gen[Any, String] =
-    Gen.fromZIO {
-      ZIO.succeed {
-        KeyGenerator.generateL32()
-      }
+      ZIO.succeed(IdGenerator.generate())
     }

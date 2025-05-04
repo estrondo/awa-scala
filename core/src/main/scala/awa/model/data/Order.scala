@@ -6,8 +6,8 @@ opaque type Order = Int
 
 object Order:
 
-  def apply(value: Int): Order            = value
-  
+  def apply(value: Int): Order = value
+
   extension (value: Order) def value: Int = value
 
   given Transformer[Order, Int] with

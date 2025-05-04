@@ -14,6 +14,7 @@ import awa.testing.generator.randomAccountId
 import awa.testing.generator.randomAuthorisation
 import awa.testing.generator.randomTrack
 import awa.testing.generator.randomTrackSegment
+import awa.typeclass.ToShow
 import awa.v1.livetrack.CreateLiveTrackResponse
 import awa.v1.livetrack.LiveTrackCreated
 import awa.v1.livetrack.LiveTrackResponse
@@ -65,7 +66,7 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
             traceId = request.traceId,
             content = CreateLiveTrackResponse.Content.LiveTrackCreated(
               LiveTrackCreated(
-                id = track.id.value,
+                id = ToShow(track.id),
                 createdAt = track.createdAt.value.toEpochSecond,
               ),
             ),

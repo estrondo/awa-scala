@@ -46,7 +46,7 @@ extension (gen: AwaGen)
       yield
         val sin = math.sin(angle)
         val cos = math.cos(angle)
-        (angle + step, Coordinate(x + r * sin, y + r * cos, 0D))
+        (angle + step, Coordinate(x + r * sin, y + r * cos, 0d))
 
     for
       p           <- Gen.oneOf(Gen.const(0), Gen.int(pMin, pMax))

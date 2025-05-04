@@ -3,6 +3,7 @@ package awa.persistence.postgres
 import awa.AwaException
 import awa.F
 import awa.L
+import awa.ducktape.TransformTo
 import awa.ducktape.given
 import awa.generator.TimeGenerator
 import awa.mapErrorToAwa
@@ -14,7 +15,6 @@ import io.github.arainko.ducktape.*
 import javax.sql.DataSource
 import org.locationtech.jts.geom.GeometryFactory
 import zio.ZIO
-import awa.ducktape.TransformTo
 
 object PostgresTrackSegmentRepository:
 

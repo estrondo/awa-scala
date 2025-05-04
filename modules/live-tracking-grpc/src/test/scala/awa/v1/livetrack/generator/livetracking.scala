@@ -7,6 +7,7 @@ import awa.testing.generator.randomDeviceType
 import awa.testing.generator.randomTraceId
 import awa.testing.generator.randomTrackId
 import awa.testing.generator.tagMap
+import awa.typeclass.ToShow
 import awa.v1.livetrack.LiveTrackPosition
 import awa.v1.livetrack.LiveTrackRequest
 import awa.v1.livetrack.LiveTrackSegment
@@ -93,8 +94,8 @@ extension (self: AwaGen)
       content          <- gen
       now              <- self.nowZonedDateTime
     yield LiveTrackRequest(
-      traceId = traceId.value,
-      trackId = trackId.value,
+      traceId = ToShow(traceId),
+      trackId = ToShow(trackId),
       tags = tagMap.value,
       timestamp = now.toEpochSecond(),
       deviceId = deviceId.value,

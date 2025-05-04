@@ -8,6 +8,7 @@ import awa.test.testcontainers.Container
 import awa.test.testcontainers.PostgresDataSource
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
+import awa.testing.generator.randomOrder
 import awa.testing.generator.randomTrackSegment
 import io.getquill.PostgresZioJdbcContext
 import io.getquill.SnakeCase
@@ -18,7 +19,6 @@ import zio.Scope
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
-import awa.testing.generator.randomOrder
 
 object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, ZIOStubs:
 
@@ -35,7 +35,7 @@ object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, Z
         ),
       ) { (trackSegment, now) =>
         for
-          _      <- stubLayerWith[TimeGenerator] { generator => 
+          _      <- stubLayerWith[TimeGenerator] { generator =>
                       (() => generator.now()).returns(now)
                     }
           result <- ZIO.serviceWithZIO[TrackSegmentRepository](_.add(trackSegment))

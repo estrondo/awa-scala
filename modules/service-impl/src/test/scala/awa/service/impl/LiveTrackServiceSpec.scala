@@ -1,12 +1,12 @@
 package awa.service.impl
 
-import awa.generator.KeyGenerator
+import awa.generator.IdGenerator
 import awa.generator.TimeGenerator
 import awa.model.Track
 import awa.model.data.CreatedAt
 import awa.model.data.TrackId
 import awa.persistence.TrackRepository
-import awa.scalamock.KeyGeneratorZIOStub
+import awa.scalamock.IdGeneratorZIOStub
 import awa.scalamock.ZIOStubBaseOperations
 import awa.service.LiveTrackService
 import awa.service.impl
@@ -21,13 +21,13 @@ import zio.ZIO
 import zio.ZLayer
 import zio.test.*
 
-object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub with ZIOStubBaseOperations:
+object LiveTrackServiceSpec extends Spec with ZIOStubs with IdGeneratorZIOStub with ZIOStubBaseOperations:
 
   def spec = suite(nameOf[LiveTrackService])(
     test(s"It should add a ${nameOf[Track]} into the repository.") {
       val gen =
         for
-          expectedId <- AwaGen.keyGeneratorL32
+          expectedId <- AwaGen.generateId
           now        <- AwaGen.nowZonedDateTime
           trackInput <- AwaGen.randomLiveTrackInput
           accountId  <- AwaGen.randomAccountId
@@ -47,7 +47,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
 
       check(gen) { (now, expectedId, input, expectedTrack) =>
         for
-          _      <- stubKeyGeneratorL32(expectedId)
+          _      <- stubIdGenerator(expectedId)
           _      <- stubLayerWith[TimeGenerator].apply { generator =>
                       (() => generator.now()).returns(now)
                     }
@@ -61,7 +61,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with KeyGeneratorZIOStub 
       }
     } @@ TestAspect.samples(400),
   ).provide(
-    stubLayer[KeyGenerator],
+    stubLayer[IdGenerator],
     stubLayer[TimeGenerator],
     stubLayer[TrackRepository],
     ZLayer.fromFunction(impl.LiveTrackService.apply),
