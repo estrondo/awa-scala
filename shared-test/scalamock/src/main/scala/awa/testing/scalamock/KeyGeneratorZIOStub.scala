@@ -6,12 +6,6 @@ import org.scalamock.stubs.ZIOStubs
 trait KeyGeneratorZIOStub:
   this: ZIOStubs & ZIOStubBaseOperations =>
 
-  inline def stubKeyGeneratorL4(key: String = KeyGenerator.generateL4()) =
-    stubLayerWith[KeyGenerator].apply { generator =>
-      (() => generator.generateL4()).returns(key)
-      key
-    }
-
   inline def stubKeyGeneratorL8(key: String = KeyGenerator.generateL8()) =
     stubLayerWith[KeyGenerator].apply { generator =>
       (() => generator.generateL8()).returns(key)
