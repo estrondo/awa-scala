@@ -15,11 +15,11 @@ object Awa {
     val protoQuill     = "4.8.6"
     val locationTech   = "1.20.0"
     val ducktape       = "0.2.8"
-    val scalaMock      = "7.3.1"
-    val testcontainers = "1.20.6"
+    val scalaMock      = "7.3.2"
+    val testcontainers = "1.21.0"
     val zioLogging     = "2.5.0"
     val logbackClassic = "1.5.18"
-    val gt             = "32.2"
+    val gt             = "33.0"
   }
 
   object Dependencies {
