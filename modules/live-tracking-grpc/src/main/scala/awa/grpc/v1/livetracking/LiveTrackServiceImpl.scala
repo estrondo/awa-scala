@@ -1,4 +1,4 @@
-package awa.grpc.v1.livetracking
+package awa.grpc.v1.livetrack
 
 import awa.AwaException
 import awa.EF
@@ -55,7 +55,7 @@ import zio.IO
 import zio.ZIO
 import zio.stream.Stream
 
-object LiveTrackingService:
+object LiveTrackServiceImpl:
 
   def apply(
       timeGenerator: TimeGenerator,
@@ -129,7 +129,7 @@ object LiveTrackingService:
           .fromEither {
             val now                              = timeGenerator.now()
             val (validSegment, validSegmentData) =
-              LiveTrackingProtocol.extractSegment("segment", "segmentData")(value.data, request)
+              LiveTrackProtocol.extractSegment("segment", "segmentData")(value.data, request)
 
             request
               .into[TrackSegmentInput]
@@ -175,7 +175,7 @@ object LiveTrackingService:
 
             val now                            = timeGenerator.now()
             val (valPosition, valPositionData) =
-              LiveTrackingProtocol.extractPosition("position", "positionData")(value.data, request)
+              LiveTrackProtocol.extractPosition("position", "positionData")(value.data, request)
             request
               .into[TrackPositionInput]
               .fallible

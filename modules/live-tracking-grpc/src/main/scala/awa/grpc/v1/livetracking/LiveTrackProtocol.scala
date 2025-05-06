@@ -1,4 +1,4 @@
-package awa.grpc.v1.livetracking
+package awa.grpc.v1.livetrack
 
 import awa.ducktape.TransformTo
 import awa.grpc.protocol.GrpcZonedDateTimeProtocol
@@ -17,7 +17,7 @@ import java.io.DataInputStream
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
 
-object LiveTrackingProtocol:
+object LiveTrackProtocol:
 
   private val ZeroAltitude = 20000
 

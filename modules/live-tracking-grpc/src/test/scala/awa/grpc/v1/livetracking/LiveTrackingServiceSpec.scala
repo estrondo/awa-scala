@@ -1,4 +1,4 @@
-package awa.grpc.v1.livetracking
+package awa.grpc.v1.livetrack
 
 import awa.crs.Geodesic
 import awa.generator.TimeGenerator
@@ -32,7 +32,7 @@ import zio.test.*
 
 object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
 
-  def spec = suite(typeOf(LiveTrackingService))(
+  def spec = suite(typeOf(LiveTrackServiceImpl))(
     test("It should create a new track") {
       val gen =
         for
@@ -119,5 +119,5 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
     ZLayer.succeed(GeometryFactory()),
     stubLayer[TimeGenerator],
     stubLayer[TrackService],
-    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) => LiveTrackingService(x, y)(using z)),
+    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) => LiveTrackServiceImpl(x, y)(using z)),
   )

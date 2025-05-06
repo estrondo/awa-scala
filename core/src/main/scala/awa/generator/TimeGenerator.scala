@@ -8,10 +8,9 @@ trait TimeGenerator:
 
   def now(): ZonedDateTime
 
-object TimeGenerator:
+object TimeGenerator extends TimeGenerator:
 
-  val UtcGenerator: TimeGenerator =
-    val clock = Clock.systemUTC()
-    new:
-      override def now(): ZonedDateTime =
-        ZonedDateTime.now(clock).truncatedTo(ChronoUnit.SECONDS)
+  private val clock = Clock.systemUTC()
+
+  override def now(): ZonedDateTime =
+    ZonedDateTime.now(clock).truncatedTo(ChronoUnit.MILLIS)
