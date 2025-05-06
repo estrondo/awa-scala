@@ -30,7 +30,7 @@ import zio.ZLayer
 import zio.stream.ZStream
 import zio.test.*
 
-object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
+object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
 
   def spec = suite(typeOf(LiveTrackServiceImpl))(
     test("It should create a new track") {
