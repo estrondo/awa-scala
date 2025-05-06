@@ -8,6 +8,7 @@ import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.scalamock.IdGeneratorZIOStub
 import awa.scalamock.ZIOStubBaseOperations
+import awa.service.TrackService
 import awa.service.impl
 import awa.testing
 import awa.testing.Spec
@@ -19,7 +20,6 @@ import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
-import awa.service.TrackService
 
 object TrackServiceImplSpec extends Spec with ZIOStubs with IdGeneratorZIOStub with ZIOStubBaseOperations:
 

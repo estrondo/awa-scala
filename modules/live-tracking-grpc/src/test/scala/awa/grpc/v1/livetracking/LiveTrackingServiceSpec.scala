@@ -119,7 +119,5 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
     ZLayer.succeed(GeometryFactory()),
     stubLayer[TimeGenerator],
     stubLayer[TrackService],
-    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) =>
-      LiveTrackingService(x, y)(using z),
-    ),
+    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) => LiveTrackingService(x, y)(using z)),
   )

@@ -30,6 +30,7 @@ import awa.model.data.StartedAt
 import awa.model.data.TagMap
 import awa.model.data.TraceId
 import awa.model.data.TrackId
+import awa.service.TrackService
 import awa.v1.livetrack.CreateLiveTrackRequest
 import awa.v1.livetrack.CreateLiveTrackResponse
 import awa.v1.livetrack.ErrorNote
@@ -53,7 +54,6 @@ import scala.annotation.unused
 import zio.IO
 import zio.ZIO
 import zio.stream.Stream
-import awa.service.TrackService
 
 object LiveTrackingService:
 
