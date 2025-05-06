@@ -8,7 +8,6 @@ import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.scalamock.IdGeneratorZIOStub
 import awa.scalamock.ZIOStubBaseOperations
-import awa.service.LiveTrackService
 import awa.service.impl
 import awa.testing
 import awa.testing.Spec
@@ -20,10 +19,11 @@ import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
+import awa.service.TrackService
 
-object LiveTrackServiceSpec extends Spec with ZIOStubs with IdGeneratorZIOStub with ZIOStubBaseOperations:
+object TrackServiceImplSpec extends Spec with ZIOStubs with IdGeneratorZIOStub with ZIOStubBaseOperations:
 
-  def spec = suite(nameOf[LiveTrackService])(
+  def spec = suite(nameOf[TrackService])(
     test(s"It should add a ${nameOf[Track]} into the repository.") {
       val gen =
         for
@@ -54,7 +54,7 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with IdGeneratorZIOStub w
           _      <- stubLayerWithZIO[TrackRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)
                     }
-          result <- ZIO.serviceWithZIO[LiveTrackService](_.add(input, expectedTrack.accountId))
+          result <- ZIO.serviceWithZIO[TrackService](_.add(input, expectedTrack.accountId))
         yield assertTrue(
           result == expectedTrack,
         )
@@ -64,5 +64,5 @@ object LiveTrackServiceSpec extends Spec with ZIOStubs with IdGeneratorZIOStub w
     stubLayer[IdGenerator],
     stubLayer[TimeGenerator],
     stubLayer[TrackRepository],
-    ZLayer.fromFunction(impl.LiveTrackService.apply),
+    ZLayer.fromFunction(TrackServiceImpl.apply),
   )

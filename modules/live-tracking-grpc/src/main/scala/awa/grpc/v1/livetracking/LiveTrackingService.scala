@@ -15,9 +15,9 @@ import awa.grpc.errors.InvalidCreateTrackRequest
 import awa.grpc.errors.InvalidLiveTrackRequest
 import awa.grpc.errors.UnableToCreateTrack
 import awa.grpc.errors.UnableToTrack
-import awa.input.LiveTrackInput
-import awa.input.LiveTrackPositionInput
-import awa.input.LiveTrackSegmentInput
+import awa.input.TrackInput
+import awa.input.TrackPositionInput
+import awa.input.TrackSegmentInput
 import awa.logWarn
 import awa.model.Authorisation
 import awa.model.Track
@@ -30,7 +30,6 @@ import awa.model.data.StartedAt
 import awa.model.data.TagMap
 import awa.model.data.TraceId
 import awa.model.data.TrackId
-import awa.service.LiveTrackService
 import awa.v1.livetrack.CreateLiveTrackRequest
 import awa.v1.livetrack.CreateLiveTrackResponse
 import awa.v1.livetrack.ErrorNote
@@ -54,12 +53,13 @@ import scala.annotation.unused
 import zio.IO
 import zio.ZIO
 import zio.stream.Stream
+import awa.service.TrackService
 
 object LiveTrackingService:
 
   def apply(
       timeGenerator: TimeGenerator,
-      service: LiveTrackService,
+      service: TrackService,
   )(using GeometryFactory): ZioLivetrack.ZLiveTrackService[Authorisation] =
     new:
       override def create(
@@ -88,12 +88,12 @@ object LiveTrackingService:
           authorisation: Authorisation,
       )(request: LiveTrackRequest): GrpcIO[LiveTrackResponse] =
         for either <- convertToTrackInput(request).flatMap {
-                        case input: LiveTrackSegmentInput  =>
+                        case input: TrackSegmentInput  =>
                           service
                             .track(input, authorisation.accountId)
                             .map(convertToLiveTrackSuccess)
                             .mapError(convertToLiveTrackError(UnableToTrack))
-                        case input: LiveTrackPositionInput =>
+                        case input: TrackPositionInput =>
                           service
                             .track(input, authorisation.accountId)
                             .map(convertToLiveTrackSuccess)
@@ -114,7 +114,7 @@ object LiveTrackingService:
 
       private def convertToTrackInput(
           request: LiveTrackRequest,
-      ): EF[LiveTrackError, LiveTrackSegmentInput | LiveTrackPositionInput] =
+      ): EF[LiveTrackError, TrackSegmentInput | TrackPositionInput] =
         request.content match {
           case Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
           case Content.Position(value) => convertToLiveTrackPositionInput(value, request)
@@ -124,7 +124,7 @@ object LiveTrackingService:
       private def convertToLiveTrackSegmentInput(
           value: LiveTrackSegment,
           request: LiveTrackRequest,
-      ): EF[LiveTrackError, LiveTrackSegmentInput] =
+      ): EF[LiveTrackError, TrackSegmentInput] =
         ZIO
           .fromEither {
             val now                              = timeGenerator.now()
@@ -132,7 +132,7 @@ object LiveTrackingService:
               LiveTrackingProtocol.extractSegment("segment", "segmentData")(value.data, request)
 
             request
-              .into[LiveTrackSegmentInput]
+              .into[TrackSegmentInput]
               .fallible
               .transform(
                 Field.fallibleConst(
@@ -169,7 +169,7 @@ object LiveTrackingService:
       private def convertToLiveTrackPositionInput(
           value: LiveTrackPosition,
           request: LiveTrackRequest,
-      ): EF[LiveTrackError, LiveTrackPositionInput] =
+      ): EF[LiveTrackError, TrackPositionInput] =
         ZIO
           .fromEither {
 
@@ -177,7 +177,7 @@ object LiveTrackingService:
             val (valPosition, valPositionData) =
               LiveTrackingProtocol.extractPosition("position", "positionData")(value.data, request)
             request
-              .into[LiveTrackPositionInput]
+              .into[TrackPositionInput]
               .fallible
               .transform(
                 Field.fallibleConst(
@@ -219,12 +219,12 @@ object LiveTrackingService:
       private def reportEmptyLiveTrackRequest(@unused request: LiveTrackRequest): EF[LiveTrackError, Nothing] =
         ZIO.fail(LiveTrackError(code = EmptyTracking))
 
-      private def convertToLiveTrackInput(request: CreateLiveTrackRequest): EF[LiveTrackError, LiveTrackInput] =
+      private def convertToLiveTrackInput(request: CreateLiveTrackRequest): EF[LiveTrackError, TrackInput] =
         ZIO
           .fromEither {
             val now = timeGenerator.now()
             request
-              .into[LiveTrackInput]
+              .into[TrackInput]
               .fallible
               .transform(
                 Field.fallibleConst(

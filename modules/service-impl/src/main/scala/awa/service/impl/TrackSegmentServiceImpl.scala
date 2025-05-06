@@ -2,23 +2,23 @@ package awa.service.impl
 
 import awa.*
 import awa.generator.IdGenerator
-import awa.input.LiveTrackSegmentInput
+import awa.input.TrackSegmentInput
 import awa.model.Track
 import awa.model.TrackSegment
 import awa.model.data.TrackSegmentId
 import awa.persistence.TrackSegmentRepository
-import awa.service.LiveTrackSegmentService
+import awa.service.TrackSegmentService
 import awa.typeclass.ToShow
 import io.github.arainko.ducktape.*
 import zio.ZIO
 
-object LiveTrackSegmentService:
+object TrackSegmentServiceImpl:
 
   def apply(
       idGenerator: IdGenerator,
       repository: TrackSegmentRepository,
-  ): LiveTrackSegmentService = new LiveTrackSegmentService:
-    override def add(input: LiveTrackSegmentInput, track: Track): F[TrackSegment] = {
+  ): TrackSegmentService = new TrackSegmentService:
+    override def add(input: TrackSegmentInput, track: Track): F[TrackSegment] = {
       for
         trackSegment <- convert(input, track)
                           .logError("Unable to convert the input.")
@@ -33,7 +33,7 @@ object LiveTrackSegmentService:
       "account.id"      -> ToShow(track.accountId),
     )
 
-    private def convert(input: LiveTrackSegmentInput, track: Track): F[TrackSegment] =
+    private def convert(input: TrackSegmentInput, track: Track): F[TrackSegment] =
       ZIO
         .attempt {
           input

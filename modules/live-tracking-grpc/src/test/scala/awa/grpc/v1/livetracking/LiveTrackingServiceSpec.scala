@@ -2,12 +2,12 @@ package awa.grpc.v1.livetracking
 
 import awa.crs.Geodesic
 import awa.generator.TimeGenerator
-import awa.input.LiveTrackSegmentInput
+import awa.input.TrackSegmentInput
 import awa.model.Authorisation
 import awa.model.Track
 import awa.model.data.AccountId
 import awa.scalamock.ZIOStubBaseOperations
-import awa.service.LiveTrackService
+import awa.service.TrackService
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
 import awa.testing.generator.randomAccountId
@@ -55,7 +55,7 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
           _      <- stubLayerWith[TimeGenerator] { generator =>
                       (() => generator.now()).returns(now)
                     }
-          _      <- stubLayerWith[LiveTrackService] { service =>
+          _      <- stubLayerWith[TrackService] { service =>
                       service.add.returns:
                         case (_, accountId) if accountId == authorisation.accountId => ZIO.succeed(track)
 
@@ -93,9 +93,9 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
           _      <- stubLayerWith[TimeGenerator] { generator =>
                       (() => generator.now()).returns(now)
                     }
-          _      <- stubLayerWith[LiveTrackService] { service =>
+          _      <- stubLayerWith[TrackService] { service =>
                       (service
-                        .track(_: LiveTrackSegmentInput, _: AccountId))
+                        .track(_: TrackSegmentInput, _: AccountId))
                         .returns:
                           case (_, accountId) if accountId == authorisation.accountId => ZIO.succeed(expectedTrackSegment)
                           case (_, _)                                                 => ???
@@ -118,8 +118,8 @@ object LiveTrackingServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
   ).provideSome(
     ZLayer.succeed(GeometryFactory()),
     stubLayer[TimeGenerator],
-    stubLayer[LiveTrackService],
-    ZLayer.fromFunction((x: TimeGenerator, y: LiveTrackService, z: GeometryFactory) =>
+    stubLayer[TrackService],
+    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) =>
       LiveTrackingService(x, y)(using z),
     ),
   )

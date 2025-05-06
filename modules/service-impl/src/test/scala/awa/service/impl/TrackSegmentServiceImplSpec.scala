@@ -6,7 +6,7 @@ import awa.model.data.TrackSegmentId
 import awa.persistence.TrackSegmentRepository
 import awa.scalamock.IdGeneratorZIOStub
 import awa.scalamock.ZIOStubBaseOperations
-import awa.service.LiveTrackSegmentService
+import awa.service.TrackSegmentService
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
 import awa.testing.generator.randomLiveTrackSegmentInput
@@ -16,9 +16,9 @@ import zio.ZIO
 import zio.ZLayer
 import zio.test.*
 
-object LiveTrackSegmentServiceSpec extends Spec with IdGeneratorZIOStub with ZIOStubs with ZIOStubBaseOperations:
+object TrackSegmentServiceImplSpec extends Spec with IdGeneratorZIOStub with ZIOStubs with ZIOStubBaseOperations:
 
-  def spec = suite(nameOf[LiveTrackSegmentService])(
+  def spec = suite(nameOf[TrackSegmentService])(
     test(s"It should add a ${nameOf[TrackSegment]} into the repository.") {
       val gen =
         for
@@ -47,7 +47,7 @@ object LiveTrackSegmentServiceSpec extends Spec with IdGeneratorZIOStub with ZIO
           _      <- stubLayerWithZIO[TrackSegmentRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)
                     }
-          result <- ZIO.serviceWithZIO[LiveTrackSegmentService](_.add(input, track))
+          result <- ZIO.serviceWithZIO[TrackSegmentService](_.add(input, track))
         yield assertTrue(
           result == expected,
         )
@@ -56,5 +56,5 @@ object LiveTrackSegmentServiceSpec extends Spec with IdGeneratorZIOStub with ZIO
   ).provide(
     stubLayer[IdGenerator],
     stubLayer[TrackSegmentRepository],
-    ZLayer.fromFunction(LiveTrackSegmentService.apply),
+    ZLayer.fromFunction(TrackSegmentServiceImpl.apply),
   )
