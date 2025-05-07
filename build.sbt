@@ -1,8 +1,8 @@
 import Awa._
 
-ThisBuild / scalaVersion := "3.6.4"
-ThisBuild / organization := "one.estrondo"
-ThisBuild / version      := Version.awa
+ThisBuild / scalaVersion    := "3.6.4"
+ThisBuild / organization    := "one.estrondo"
+ThisBuild / dynverSeparator := "_"
 
 ThisBuild / scalacOptions ++= Seq(
   "-Wunused:all",
