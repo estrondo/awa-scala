@@ -9,7 +9,7 @@ import awa.model.data.RecordedAt
 import awa.model.data.Segment
 import awa.model.data.SegmentData
 import awa.model.data.VerticalAccuracy
-import awa.v1.livetrack.LiveTrackRequest
+import awa.v1.generated.livetrack.LiveTrackRequest
 import awa.validation.FailureNote
 import awa.validation.Valid
 import com.google.protobuf.ByteString

@@ -32,5 +32,8 @@ shared/gt-crs/target/
 /modules/live-track-grpc/target/
 
 
+/generated/live-track-grpc/target/
+
+
 /docker/postgres-testing/migration/
 /docker/postgres-testing/*.tar.gz

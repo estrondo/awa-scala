@@ -89,8 +89,8 @@ object Awa {
 
   object Settings {
     val zioGrpc = Compile / PB.targets := Seq(
-      scalapb.gen(grpc = true)          -> (Compile / sourceManaged).value / "scalapb",
-      scalapb.zio_grpc.ZioCodeGenerator -> (Compile / sourceManaged).value / "scalapb",
+      scalapb.gen(grpc = true, scala3Sources = true) -> (Compile / sourceManaged).value / "scalapb",
+      scalapb.zio_grpc.ZioCodeGenerator              -> (Compile / sourceManaged).value / "scalapb",
     )
 
     val zioTest = testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")

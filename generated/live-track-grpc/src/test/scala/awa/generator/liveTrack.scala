@@ -1,4 +1,4 @@
-package awa.v1.livetrack.generator
+package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
 import awa.testing.generator.randomAuthorisation
@@ -8,9 +8,6 @@ import awa.testing.generator.randomTraceId
 import awa.testing.generator.randomTrackId
 import awa.testing.generator.tagMap
 import awa.typeclass.ToShow
-import awa.v1.livetrack.LiveTrackPosition
-import awa.v1.livetrack.LiveTrackRequest
-import awa.v1.livetrack.LiveTrackSegment
 import com.google.protobuf.ByteString
 import java.io.DataOutputStream
 import zio.Random

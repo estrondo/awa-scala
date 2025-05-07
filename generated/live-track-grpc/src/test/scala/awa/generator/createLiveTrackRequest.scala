@@ -1,11 +1,10 @@
-package awa.v1.livetrack.generator
+package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
 import awa.testing.generator.randomDeviceId
 import awa.testing.generator.randomDeviceType
 import awa.testing.generator.randomTraceId
 import awa.typeclass.ToShow
-import awa.v1.livetrack.CreateLiveTrackRequest
 import zio.test.Gen
 
 extension (gen: AwaGen)

@@ -30,6 +30,7 @@ lazy val root = project
     `shared-test-core`,
     `shared-test-scalamock`,
     `shared-test-testcontainers`,
+    `generated-live-track-grpc`,
   )
 
 lazy val `core` = (project in file("core"))
@@ -155,14 +156,23 @@ lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
 lazy val `module-live-track-grpc` = (project in file("modules/live-track-grpc"))
   .settings(
     name := "awa-live-track-grpc",
+  )
+  .dependsOn(
+    `core`                      % cctt,
+    `generated-live-track-grpc` % cctt,
+    `shared-grpc`               % cctt,
+    `shared-ducktape`           % cctt,
+    `shared-gt-crs`             % cctt,
+    `shared-test-core`          % Test,
+    `shared-test-scalamock`     % Test,
+  )
+
+lazy val `generated-live-track-grpc` = (project in file("generated/live-track-grpc"))
+  .settings(
+    name := "awa-generated-live-track-grpc",
     Dependencies.zioGrpc,
     Settings.zioGrpc,
   )
   .dependsOn(
-    `core`                  % cctt,
-    `shared-grpc`           % cctt,
-    `shared-ducktape`       % cctt,
-    `shared-gt-crs`         % cctt,
-    `shared-test-core`      % Test,
-    `shared-test-scalamock` % Test,
+    `shared-test-core` % Test,
   )

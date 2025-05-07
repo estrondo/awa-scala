@@ -31,20 +31,19 @@ import awa.model.data.TagMap
 import awa.model.data.TraceId
 import awa.model.data.TrackId
 import awa.service.TrackService
-import awa.v1.livetrack.CreateLiveTrackRequest
-import awa.v1.livetrack.CreateLiveTrackResponse
-import awa.v1.livetrack.ErrorNote
-import awa.v1.livetrack.LiveTrackCreated
-import awa.v1.livetrack.LiveTrackError
-import awa.v1.livetrack.LiveTrackPosition
-import awa.v1.livetrack.LiveTrackRequest
-import awa.v1.livetrack.LiveTrackRequest.Content
-import awa.v1.livetrack.LiveTrackResponse
-import awa.v1.livetrack.LiveTrackSegment
-import awa.v1.livetrack.LiveTrackSuccess
-import awa.v1.livetrack.StatisticsRequest
-import awa.v1.livetrack.StatisticsResponse
-import awa.v1.livetrack.ZioLivetrack
+import awa.v1.generated.livetrack.CreateLiveTrackRequest
+import awa.v1.generated.livetrack.CreateLiveTrackResponse
+import awa.v1.generated.livetrack.ErrorNote
+import awa.v1.generated.livetrack.LiveTrackCreated
+import awa.v1.generated.livetrack.LiveTrackError
+import awa.v1.generated.livetrack.LiveTrackPosition
+import awa.v1.generated.livetrack.LiveTrackRequest
+import awa.v1.generated.livetrack.LiveTrackResponse
+import awa.v1.generated.livetrack.LiveTrackSegment
+import awa.v1.generated.livetrack.LiveTrackSuccess
+import awa.v1.generated.livetrack.StatisticsRequest
+import awa.v1.generated.livetrack.StatisticsResponse
+import awa.v1.generated.livetrack.ZioLivetrack
 import io.github.arainko.ducktape.Field
 import io.github.arainko.ducktape.into
 import io.grpc.StatusException
@@ -116,9 +115,9 @@ object LiveTrackServiceImpl:
           request: LiveTrackRequest,
       ): EF[LiveTrackError, TrackSegmentInput | TrackPositionInput] =
         request.content match {
-          case Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
-          case Content.Position(value) => convertToLiveTrackPositionInput(value, request)
-          case Content.Empty           => reportEmptyLiveTrackRequest(request)
+          case LiveTrackRequest.Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
+          case LiveTrackRequest.Content.Position(value) => convertToLiveTrackPositionInput(value, request)
+          case LiveTrackRequest.Content.Empty           => reportEmptyLiveTrackRequest(request)
         }
 
       private def convertToLiveTrackSegmentInput(

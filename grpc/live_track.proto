@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package awa.v1;
+option java_package = "awa.v1.generated";
 
 service LiveTrackService {
   rpc Create(CreateLiveTrackRequest) returns (CreateLiveTrackResponse);
