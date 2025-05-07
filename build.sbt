@@ -22,7 +22,7 @@ lazy val root = project
     `module-service-impl`,
     `module-persistence-postgres`,
     `module-account-grpc`,
-    `module-live-tracking-grpc`,
+    `module-live-track-grpc`,
     `shared-ducktape`,
     `shared-logging`,
     `shared-grpc`,
@@ -152,9 +152,9 @@ lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
     `shared-ducktape` % cctt,
   )
 
-lazy val `module-live-tracking-grpc` = (project in file("modules/live-tracking-grpc"))
+lazy val `module-live-track-grpc` = (project in file("modules/live-track-grpc"))
   .settings(
-    name := "awa-live-tracking-grpc",
+    name := "awa-live-track-grpc",
     Dependencies.zioGrpc,
     Settings.zioGrpc,
   )

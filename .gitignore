@@ -29,7 +29,7 @@ shared/gt-crs/target/
 /modules/persistence-postgres/target/
 /modules/service-impl/target/
 /modules/account-grpc/target/
-/modules/live-tracking-grpc/target/
+/modules/live-track-grpc/target/
 
 
 /docker/postgres-testing/migration/
