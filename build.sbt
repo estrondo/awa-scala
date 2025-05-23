@@ -27,6 +27,7 @@ lazy val root = project
     `shared-logging`,
     `shared-grpc`,
     `shared-gt-crs`,
+    `shared-kafka`,
     `shared-test-core`,
     `shared-test-scalamock`,
     `shared-test-testcontainers`,
@@ -77,6 +78,19 @@ lazy val `shared-gt-crs` = (project in file("shared/gt-crs"))
     core % cctt,
   )
 
+lazy val `shared-kafka` = (project in file("shared/kafka"))
+  .settings(
+    name := "awa-shared-kafka",
+    Dependencies.avro4s,
+    Dependencies.kafka,
+    Settings.zioTest,
+  )
+  .dependsOn(
+    core                         % cctt,
+    `shared-test-core`           % Test,
+    `shared-test-testcontainers` % Test,
+  )
+
 lazy val `shared-test-core` = (project in file("shared-test/core"))
   .settings(
     name := "awa-shared-test-core",
@@ -102,9 +116,10 @@ lazy val `shared-test-scalamock` = (project in file("shared-test/scalamock"))
 lazy val `shared-test-testcontainers` = (project in file("shared-test/testcontainers"))
   .settings(
     name := "awa-shared-test-testcontainers",
-    Dependencies.testcontainers,
+    Dependencies.testContainers,
     Dependencies.protoQuill,
     Dependencies.postgresDriver,
+    Dependencies.kafka,
   )
   .dependsOn(
     core % cctt,
@@ -120,10 +135,10 @@ lazy val `module-persistence-postgres` = (project in file("modules/persistence-p
   )
   .dependsOn(
     `core`                       % cctt,
+    `shared-ducktape`            % cctt,
     `shared-test-core`           % Test,
     `shared-test-testcontainers` % Test,
     `shared-test-scalamock`      % Test,
-    `shared-ducktape`            % cctt,
   )
 
 lazy val `module-service-impl` = (project in file("modules/service-impl"))

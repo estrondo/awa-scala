@@ -11,3 +11,7 @@ trait ContainerWrapper:
 class PostgreSQLContainerWrapper(override val container: org.testcontainers.containers.PostgreSQLContainer[?])
     extends ContainerWrapper:
   override type Container = org.testcontainers.containers.PostgreSQLContainer[?]
+
+class KafkaContainerWrapper(override val container: org.testcontainers.containers.KafkaContainer)
+    extends ContainerWrapper:
+  override type Container = org.testcontainers.containers.KafkaContainer

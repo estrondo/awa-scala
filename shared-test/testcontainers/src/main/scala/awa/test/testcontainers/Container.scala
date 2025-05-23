@@ -49,3 +49,8 @@ object Container:
 
     PostgreSQLContainerWrapper(container)
   }
+
+  val kafkaContainer: ZLayer[Scope, Throwable, KafkaContainerWrapper] = layerOf {
+    val container = containers.KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.9.1"))
+    KafkaContainerWrapper(container)
+  }

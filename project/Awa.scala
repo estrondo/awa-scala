@@ -12,6 +12,8 @@ object Awa {
     val awa            = "1.0.0"
     val zio            = "2.1.17"
     val postgresDriver = "42.7.5"
+    val kafka          = "3.0.0-rc1"
+    val avro4s         = "5.0.14"
     val protoQuill     = "4.8.6"
     val locationTech   = "1.20.0"
     val ducktape       = "0.2.8"
@@ -32,6 +34,16 @@ object Awa {
       "dev.zio" %% "zio-streams"  % Version.zio,
       "dev.zio" %% "zio-test"     % Version.zio % Test,
       "dev.zio" %% "zio-test-sbt" % Version.zio % Test,
+    )
+
+    val kafka = {
+      declare(
+        "dev.zio" %% "zio-kafka" % Version.kafka,
+      )
+    }
+
+    val avro4s = declare(
+      "com.sksamuel.avro4s" %% "avro4s-core" % Version.avro4s,
     )
 
     val zioTestWithCompile = declare(
@@ -71,8 +83,9 @@ object Awa {
       "org.scalamock" %% "scalamock-zio" % Version.scalaMock,
     )
 
-    val testcontainers = declare(
+    val testContainers = declare(
       "org.testcontainers" % "postgresql" % Version.testcontainers,
+      "org.testcontainers" % "kafka"      % Version.testcontainers,
     )
 
     val logging = declare(

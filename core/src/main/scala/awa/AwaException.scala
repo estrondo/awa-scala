@@ -15,6 +15,14 @@ object AwaException:
 
   class InsertionFailure(message: String, cause: Throwable) extends AwaException(message, cause)
 
+  class InvalidState(message: String, cause: Throwable = null) extends AwaException(message, cause)
+
+  class KafkaException(message: String, cause: Throwable = null) extends AwaException(message, cause)
+
+  class DecodeFailure(message: String, cause: Throwable = null) extends AwaException(message, cause)
+
+  class EncodeFailure(message: String, cause: Throwable = null) extends AwaException(message, cause)
+
   class WithNotes(message: String, val notes: Seq[FailureNote]) extends AwaException(message):
 
     override def getMessage(): String =

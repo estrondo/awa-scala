@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+    <logger name="org.testcontainers" level="warn" />
+    <logger name="tc.testcontainers/ryuk:0.11.0" level="warn" />
+    <logger name="tc.confluentinc/cp-kafka:7.9.1" level="trace" />
+    <logger name="zio.kafka" level="warn" />
+    <logger name="org.apache.kafka" level="warn" />
+    <logger name="com.github.dockerjava" level="warn" />
+</configuration>
