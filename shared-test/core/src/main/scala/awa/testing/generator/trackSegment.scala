@@ -5,15 +5,15 @@ import awa.model.data.CreatedAt
 import zio.test.Gen
 
 extension (self: AwaGen)
-  def randomTrackSegment: Gen[Any, TrackSegment] =
+  def trackSegment: Gen[Any, TrackSegment] =
     for
-      id          <- self.randomTrackSegmentId
-      trackId     <- self.randomTrackId
+      id          <- self.trackSegmentId
+      trackId     <- self.trackId
       startedAt   <- self.startedAtNow
-      segment     <- self.randomSegment(2, 20)
-      segmentData <- self.randomSegmentData
+      segment     <- self.segment(2, 20)
+      segmentData <- self.segmentData
       tagMap      <- self.tagMap(Gen.string, Gen.string)
-      order       <- Gen.option(self.randomOrder)
+      order       <- Gen.option(self.order)
       seconds     <- Gen.option(Gen.int(5, 60))
     yield TrackSegment(
       id = id,

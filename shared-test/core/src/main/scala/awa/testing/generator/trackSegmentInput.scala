@@ -4,17 +4,17 @@ import awa.input.TrackSegmentInput
 import awa.model.data.Segment
 import zio.test.Gen
 
-extension (gen: AwaGen)
-  def randomLiveTrackSegmentInput: Gen[Any, TrackSegmentInput] =
+extension (self: AwaGen)
+  def liveTrackSegmentInput: Gen[Any, TrackSegmentInput] =
     for
-      trackId     <- gen.randomTrackId
-      traceId     <- gen.randomTraceId
-      tagMap      <- gen.tagMap(Gen.string, Gen.string)
-      startedAt   <- gen.startedAtNow
-      deviceId    <- Gen.option(gen.randomDeviceId)
-      deviceType  <- Gen.option(gen.randomDeviceType)
-      lineString  <- gen.lineString(-50, -40, -30, -10, 0.0001, 0.001, 10, 1000)
-      segmentData <- gen.randomSegmentData
+      trackId     <- self.trackId
+      traceId     <- self.traceId
+      tagMap      <- self.tagMap(Gen.string, Gen.string)
+      startedAt   <- self.startedAtNow
+      deviceId    <- Gen.option(self.deviceId)
+      deviceType  <- Gen.option(self.deviceType)
+      lineString  <- self.lineString(-50, -40, -30, -10, 0.0001, 0.001, 10, 1000)
+      segmentData <- self.segmentData
     yield TrackSegmentInput(
       trackId = trackId,
       traceId = traceId,

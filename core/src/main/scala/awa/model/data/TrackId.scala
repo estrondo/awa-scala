@@ -1,7 +1,7 @@
 package awa.model.data
 
 import awa.generator.IdGenerator
-import awa.typeclass.ToShow
+import awa.typeclass.ToString
 import io.github.arainko.ducktape.Transformer
 import java.util.UUID
 import java.util as ju
@@ -24,5 +24,5 @@ object TrackId:
   given Transformer[TrackId, String] with
     override def transform(value: TrackId): String = value.toString()
 
-  given ToShow[TrackId] with
-    override def show(a: TrackId): String = a.toString()
+  given ToString[TrackId] with
+    override def toString(a: TrackId): String = a.toString()

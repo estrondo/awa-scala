@@ -8,8 +8,8 @@ import awa.test.testcontainers.Container
 import awa.test.testcontainers.PostgresDataSource
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomOrder
-import awa.testing.generator.randomTrackSegment
+import awa.testing.generator.order
+import awa.testing.generator.trackSegment
 import io.getquill.PostgresZioJdbcContext
 import io.getquill.SnakeCase
 import javax.sql.DataSource
@@ -26,9 +26,9 @@ object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, Z
     test(s"It should insert a ${nameOf[Track]} into database.") {
       check(
         for
-          input <- AwaGen.randomTrackSegment
+          input <- AwaGen.trackSegment
           now   <- AwaGen.nowZonedDateTime
-          order <- AwaGen.randomOrder
+          order <- AwaGen.order
         yield (
           input.copy(order = Some(order)),
           now,
@@ -36,7 +36,7 @@ object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, Z
       ) { (trackSegment, now) =>
         for
           _      <- stubLayerWith[TimeGenerator] { generator =>
-                      (() => generator.now()).returns(now)
+                      (() => generator.now()).returnsWith(now)
                     }
           result <- ZIO.serviceWithZIO[TrackSegmentRepository](_.add(trackSegment))
         yield assertTrue(

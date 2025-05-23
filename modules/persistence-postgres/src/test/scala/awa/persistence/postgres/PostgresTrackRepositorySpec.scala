@@ -6,7 +6,7 @@ import awa.test.testcontainers.Container
 import awa.test.testcontainers.PostgresDataSource
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomTrack
+import awa.testing.generator.track
 import io.getquill.PostgresZioJdbcContext
 import io.getquill.SnakeCase
 import javax.sql.DataSource
@@ -19,7 +19,7 @@ object PostgresTrackRepositorySpec extends Spec:
 
   def spec = suite(nameOf[PostgresTrackRepository.type])(
     test(s"It should insert a ${nameOf[Track]} into database.") {
-      check(AwaGen.randomTrack) { track =>
+      check(AwaGen.track) { track =>
         for result <- ZIO.serviceWithZIO[TrackRepository](_.add(track))
         yield assertTrue(
           result == track,

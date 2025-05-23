@@ -7,7 +7,7 @@ import org.scalamock.stubs.ZIOStubs
 trait IdGeneratorZIOStub:
   this: ZIOStubs & ZIOStubBaseOperations =>
 
-  inline def stubIdGenerator(id: UUID = IdGenerator.generate()) =
+  inline def stubIdGenerator(inline id: UUID) =
     stubLayerWith[IdGenerator] { generator =>
-      (() => generator.generate()).returns(id)
+      (() => generator.generate()).returnsWith(id)
     }

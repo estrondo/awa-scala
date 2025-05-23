@@ -9,6 +9,7 @@ import zio.logging.backend.SLF4J
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
 import zio.test.testEnvironment
+import zio.test.TestAspect
 
 abstract class Spec extends ZIOSpecDefault:
 
@@ -24,3 +25,5 @@ abstract class Spec extends ZIOSpecDefault:
   protected val geometryFactoryLayer: UL[GeometryFactory] =
     val geometryFactory = GeometryFactory()
     ZLayer.succeed(geometryFactory)
+
+  protected val ignore = TestAspect.ignore

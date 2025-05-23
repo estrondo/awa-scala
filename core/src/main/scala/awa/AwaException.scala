@@ -13,20 +13,18 @@ object AwaException:
 
   class Conversion(message: String, cause: Throwable) extends AwaException(message, cause)
 
-  class InsertionFailure(message: String, cause: Throwable) extends AwaException(message, cause)
+  class Repository(message: String, cause: Throwable = null) extends AwaException(message, cause)
 
-  class InvalidState(message: String, cause: Throwable = null) extends AwaException(message, cause)
+  class Kafka(message: String, cause: Throwable = null) extends AwaException(message, cause)
 
-  class KafkaException(message: String, cause: Throwable = null) extends AwaException(message, cause)
+  class Decode(message: String, cause: Throwable = null) extends AwaException(message, cause)
 
-  class DecodeFailure(message: String, cause: Throwable = null) extends AwaException(message, cause)
+  class Encode(message: String, cause: Throwable = null) extends AwaException(message, cause)
 
-  class EncodeFailure(message: String, cause: Throwable = null) extends AwaException(message, cause)
-
-  class WithNotes(message: String, val notes: Seq[FailureNote]) extends AwaException(message):
+  class WithNote(message: String, val notes: Seq[FailureNote]) extends AwaException(message):
 
     override def getMessage(): String =
-      val buiilder = StringBuilder()
-      buiilder.addAll(super.getMessage())
-      for note <- notes do buiilder.addAll(s"\n${note.note}: ${note.description}")
-      buiilder.result()
+      val builder = StringBuilder()
+      builder.addAll(super.getMessage())
+      for note <- notes do builder.addAll(s"\n${note.note}: ${note.description}")
+      builder.result()

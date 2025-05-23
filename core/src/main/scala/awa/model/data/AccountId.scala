@@ -1,6 +1,6 @@
 package awa.model.data
 
-import awa.typeclass.ToShow
+import awa.typeclass.ToString
 import io.github.arainko.ducktape.Transformer
 import java.util.UUID
 
@@ -14,5 +14,5 @@ object AccountId:
   given Transformer[AccountId, String] with
     override def transform(value: AccountId): String = value.toString()
 
-  given ToShow[AccountId] with
-    override def show(a: AccountId): String = a.toString()
+  given ToString[AccountId] with
+    override def toString(a: AccountId): String = a.toString()

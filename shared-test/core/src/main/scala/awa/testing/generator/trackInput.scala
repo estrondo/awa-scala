@@ -4,13 +4,13 @@ import awa.input.TrackInput
 import awa.model.data.StartedAt
 import zio.test.Gen
 
-extension (gen: AwaGen)
-  def randomLiveTrackInput: Gen[Any, TrackInput] =
+extension (self: AwaGen)
+  def liveTrackInput: Gen[Any, TrackInput] =
     for
-      traceId    <- gen.randomTraceId
-      started    <- gen.nowZonedDateTime
-      deviceId   <- gen.randomDeviceId
-      deviceType <- gen.randomDeviceType
+      traceId    <- self.traceId
+      started    <- self.nowZonedDateTime
+      deviceId   <- self.deviceId
+      deviceType <- self.deviceType
     yield TrackInput(
       traceId = traceId,
       startedAt = StartedAt(started),

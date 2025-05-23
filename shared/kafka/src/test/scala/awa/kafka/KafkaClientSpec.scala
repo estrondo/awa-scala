@@ -1,7 +1,7 @@
 package awa.kafka
 
 import awa.kafka.config.KafkaConfiguration
-import awa.kafka.generator.randomInputMessage
+import awa.kafka.generator.inputMessage
 import awa.test.testcontainers.Container
 import awa.test.testcontainers.KafkaContainerWrapper
 import awa.test.testcontainers.KafkaSettings
@@ -31,7 +31,7 @@ object KafkaClientSpec extends Spec:
   private val randomKey =
     for value <- Gen.alphaNumericString yield s"a-random-key-$value"
 
-  private val randomInputRecord = randomKey.zip(AwaGen.randomInputMessage)
+  private val randomInputRecord = randomKey.zip(AwaGen.inputMessage)
 
   private val randomInputs = Gen.listOfBounded(1, 5)(randomInputRecord)
 

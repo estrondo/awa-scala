@@ -49,7 +49,7 @@ object PostgresTrackSegmentRepository:
               Field.const(_.ord, TransformTo[Option[Int]](segment.order)),
             )
             .left
-            .map(AwaException.WithNotes("Unable to convert to TrackSegmentRow.", _))
+            .map(AwaException.WithNote("Unable to convert to TrackSegmentRow.", _))
         }
 
       private def insertRow(row: TrackSegmentRow): F[TrackSegmentRow] = (
@@ -58,5 +58,5 @@ object PostgresTrackSegmentRepository:
             table.insertValue(lift(row))
           }
         }.provideLayer(layer)
-          .mapErrorToAwa(AwaException.InsertionFailure("Unable to insert track segment.", _))
+          .mapErrorToAwa(AwaException.Repository("Unable to insert track segment.", _))
       ) as row

@@ -2,6 +2,7 @@ package awa.ducktape.fallible
 
 import awa.model.data.StartedAt
 import awa.typeclass.CompareTo
+import awa.typeclass.ToString
 import awa.validation.FailureNote
 import awa.validation.Valid
 import io.github.arainko.ducktape.Transformer
@@ -12,7 +13,7 @@ object StartedAtValidator:
   def notAfter[Source](note: String, reference: ZonedDateTime)(
       source: Source,
   )(using Transformer[Source, StartedAt], CompareTo[Source, ZonedDateTime]): Valid[StartedAt] =
-    notAfter(note, s"It must took place before $reference.", reference)(source)
+    notAfter(note, s"It must took place before ${ToString(reference)}.", reference)(source)
 
   def notAfter[Source](note: String, description: String, reference: ZonedDateTime)(source: Source)(using
       transformer: Transformer[Source, StartedAt],

@@ -4,17 +4,16 @@ import awa.model.Track
 import awa.model.data.CreatedAt
 import awa.model.data.StartedAt
 import java.time.temporal.ChronoUnit
-import scala.annotation.unused
 import zio.test.Gen
 
-extension (@unused awaGen: AwaGen)
-  def randomTrack: Gen[Any, Track] =
+extension (self: AwaGen)
+  def track: Gen[Any, Track] =
     for
-      trackId       <- AwaGen.randomTrackId
-      accountId     <- AwaGen.randomAccountId
-      startedAt     <- AwaGen.nowZonedDateTime
-      deviceId      <- AwaGen.randomDeviceId
-      deviceType    <- AwaGen.randomDeviceType
+      trackId       <- self.trackId
+      accountId     <- self.accountId
+      startedAt     <- self.nowZonedDateTime
+      deviceId      <- self.deviceId
+      deviceType    <- self.deviceType
       startedBefore <- Gen.int(60, 90)
     yield Track(
       id = trackId,

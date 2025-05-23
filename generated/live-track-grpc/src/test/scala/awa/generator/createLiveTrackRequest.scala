@@ -1,21 +1,21 @@
 package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomDeviceId
-import awa.testing.generator.randomDeviceType
-import awa.testing.generator.randomTraceId
-import awa.typeclass.ToShow
+import awa.testing.generator.deviceId
+import awa.testing.generator.deviceType
+import awa.testing.generator.traceId
+import awa.typeclass.ToString
 import zio.test.Gen
 
-extension (gen: AwaGen)
-  def randomCreateLiveTrackRequest: Gen[Any, CreateLiveTrackRequest] =
+extension (self: AwaGen)
+  def createLiveTrackRequest: Gen[Any, CreateLiveTrackRequest] =
     for
-      traceId    <- gen.randomTraceId
-      now        <- gen.nowZonedDateTime
-      deviceId   <- gen.randomDeviceId
-      deviceType <- gen.randomDeviceType
+      traceId    <- self.traceId
+      now        <- self.nowZonedDateTime
+      deviceId   <- self.deviceId
+      deviceType <- self.deviceType
     yield CreateLiveTrackRequest(
-      traceId = ToShow(traceId),
+      traceId = ToString(traceId),
       timestamp = now.toEpochSecond(),
       deviceId = deviceId.value,
       deviceType = deviceType.value,

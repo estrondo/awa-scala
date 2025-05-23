@@ -13,8 +13,8 @@ import awa.service.impl
 import awa.testing
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomAccountId
-import awa.testing.generator.randomLiveTrackInput
+import awa.testing.generator.accountId
+import awa.testing.generator.liveTrackInput
 import java.time.ZonedDateTime
 import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
@@ -29,8 +29,8 @@ object TrackServiceImplSpec extends Spec with ZIOStubs with IdGeneratorZIOStub w
         for
           expectedId <- AwaGen.generateId
           now        <- AwaGen.nowZonedDateTime
-          trackInput <- AwaGen.randomLiveTrackInput
-          accountId  <- AwaGen.randomAccountId
+          trackInput <- AwaGen.liveTrackInput
+          accountId  <- AwaGen.accountId
         yield (
           now,
           expectedId,
@@ -49,7 +49,7 @@ object TrackServiceImplSpec extends Spec with ZIOStubs with IdGeneratorZIOStub w
         for
           _      <- stubIdGenerator(expectedId)
           _      <- stubLayerWith[TimeGenerator].apply { generator =>
-                      (() => generator.now()).returns(now)
+                      (() => generator.now()).returnsWith(now)
                     }
           _      <- stubLayerWithZIO[TrackRepository].apply { repository =>
                       repository.add.returnsZIO(ZIO.succeed)

@@ -1,6 +1,6 @@
 package awa
 
-import awa.typeclass.CanBeEmpty
+import awa.typeclass.Empty
 import zio.Cause
 import zio.ZIO
 import zio.ZIOAspect
@@ -29,7 +29,7 @@ extension [R, E, A](self: ZIO[R, E, A])
     )
 
 extension [T](self: Option[T])
-  inline def getOrEmpty(using e: CanBeEmpty[T]): T =
+  inline def getOrEmpty(using e: Empty[T]): T =
     self match
       case Some(value) => value
       case None        => e.empty

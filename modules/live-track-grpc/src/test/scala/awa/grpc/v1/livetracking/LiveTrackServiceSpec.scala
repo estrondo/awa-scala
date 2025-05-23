@@ -10,19 +10,19 @@ import awa.scalamock.ZIOStubBaseOperations
 import awa.service.TrackService
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomAccountId
-import awa.testing.generator.randomAuthorisation
-import awa.testing.generator.randomTrack
-import awa.testing.generator.randomTrackSegment
-import awa.typeclass.ToShow
+import awa.testing.generator.accountId
+import awa.testing.generator.authorisation
+import awa.testing.generator.track
+import awa.testing.generator.trackSegment
+import awa.typeclass.ToString
 import awa.v1.generated.livetrack.CreateLiveTrackResponse
 import awa.v1.generated.livetrack.LiveTrackCreated
 import awa.v1.generated.livetrack.LiveTrackResponse
 import awa.v1.generated.livetrack.LiveTrackSuccess
 import awa.v1.generated.livetrack.ZioLivetrack.ZLiveTrackService
-import awa.v1.generated.livetrack.randomCreateLiveTrackRequest
-import awa.v1.generated.livetrack.randomLiveTrackRequest
-import awa.v1.generated.livetrack.randomLiveTrackSegmentContent
+import awa.v1.generated.livetrack.createLiveTrackRequest
+import awa.v1.generated.livetrack.liveTrackRequest
+import awa.v1.generated.livetrack.liveTrackSegmentContent
 import org.locationtech.jts.geom.GeometryFactory
 import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
@@ -36,11 +36,11 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
     test("It should create a new track") {
       val gen =
         for
-          request       <- AwaGen.randomCreateLiveTrackRequest
-          authorisation <- AwaGen.randomAuthorisation
-          accountId     <- AwaGen.randomAccountId
+          request       <- AwaGen.createLiveTrackRequest
+          authorisation <- AwaGen.authorisation
+          accountId     <- AwaGen.accountId
           now           <- AwaGen.nowZonedDateTime
-          track         <- AwaGen.randomTrack
+          track         <- AwaGen.track
         yield (
           request,
           authorisation,
@@ -53,7 +53,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
       check(gen) { (request, authorisation, now, track) =>
         for
           _      <- stubLayerWith[TimeGenerator] { generator =>
-                      (() => generator.now()).returns(now)
+                      (() => generator.now()).returnsWith(now)
                     }
           _      <- stubLayerWith[TrackService] { service =>
                       service.add.returns:
@@ -66,7 +66,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
             traceId = request.traceId,
             content = CreateLiveTrackResponse.Content.LiveTrackCreated(
               LiveTrackCreated(
-                id = ToShow(track.id),
+                id = ToString(track.id),
                 createdAt = track.createdAt.value.toEpochSecond,
               ),
             ),
@@ -77,10 +77,10 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
     test("It should track segments") {
       val gen =
         for
-          request       <- AwaGen.randomLiveTrackRequest(AwaGen.randomLiveTrackSegmentContent)
-          authorisation <- AwaGen.randomAuthorisation
+          request       <- AwaGen.liveTrackRequest(AwaGen.liveTrackSegmentContent)
+          authorisation <- AwaGen.authorisation
           now           <- AwaGen.nowZonedDateTime
-          trackSegment  <- AwaGen.randomTrackSegment
+          trackSegment  <- AwaGen.trackSegment
         yield (
           request,
           authorisation,
@@ -91,7 +91,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
       check(gen) { (request, authorisation, now, expectedTrackSegment) =>
         for
           _      <- stubLayerWith[TimeGenerator] { generator =>
-                      (() => generator.now()).returns(now)
+                      (() => generator.now()).returnsWith(now)
                     }
           _      <- stubLayerWith[TrackService] { service =>
                       (service
@@ -115,7 +115,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
         )
       }
     },
-  ).provideSome(
+  ).provide(
     ZLayer.succeed(GeometryFactory()),
     stubLayer[TimeGenerator],
     stubLayer[TrackService],

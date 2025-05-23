@@ -5,7 +5,7 @@ import awa.testing.generator.AwaGen
 import zio.test.Gen
 
 extension (self: AwaGen)
-  def randomInputMessage: Gen[Any, InputMessage] =
+  def inputMessage: Gen[Any, InputMessage] =
     for
       uuid    <- Gen.uuid
       title   <- Gen.alphaNumericString

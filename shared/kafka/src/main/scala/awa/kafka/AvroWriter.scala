@@ -8,18 +8,18 @@ import org.apache.avro.Schema
 
 trait AvroWriter[T]:
 
-  def write(value: T): Either[AwaException.EncodeFailure, Array[Byte]]
+  def write(value: T): Either[AwaException.Encode, Array[Byte]]
 
 object AvroWriter:
 
   def apply[T: Encoder as encoder](schema: Schema): AvroWriter[T] =
     val builder = AvroOutputStream.binary(schema, encoder)
     new:
-      override def write(value: T): Either[AwaException.EncodeFailure, Array[Byte]] =
+      override def write(value: T): Either[AwaException.Encode, Array[Byte]] =
         try
           val buffer = ByteArrayOutputStream()
           val output = builder.to(buffer).build()
           output.write(value)
           output.flush()
           Right(buffer.toByteArray())
-        catch case cause: Throwable => Left(AwaException.EncodeFailure("Unable to encode message.", cause))
+        catch case cause: Throwable => Left(AwaException.Encode("Unable to encode message.", cause))

@@ -14,7 +14,7 @@ import awa.model.data.CreatedAt
 import awa.model.data.TrackId
 import awa.persistence.TrackRepository
 import awa.service.TrackService
-import awa.typeclass.ToShow
+import awa.typeclass.ToString
 import io.github.arainko.ducktape.Field
 import io.github.arainko.ducktape.into
 import zio.ZIO
@@ -37,8 +37,8 @@ object TrackServiceImpl:
                        .logError("Unable to add track.")
       yield added
     }.annotated(
-      "traceId"   -> ToShow(input.traceId),
-      "accountId" -> ToShow(accountId),
+      "traceId"   -> ToString(input.traceId),
+      "accountId" -> ToString(accountId),
     )
 
     override def track(input: TrackPositionInput, accountId: AccountId): F[TrackPosition] = ???

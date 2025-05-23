@@ -10,18 +10,18 @@ object Awa {
 
   object Version {
     val awa            = "1.0.0"
-    val zio            = "2.1.17"
-    val postgresDriver = "42.7.5"
-    val kafka          = "3.0.0-rc1"
+    val zio            = "2.1.19"
+    val postgresDriver = "42.7.7"
+    val kafka          = "3.0.0"
     val avro4s         = "5.0.14"
     val protoQuill     = "4.8.6"
     val locationTech   = "1.20.0"
-    val ducktape       = "0.2.8"
-    val scalaMock      = "7.3.2"
-    val testcontainers = "1.21.0"
+    val ducktape       = "0.2.9"
+    val scalaMock      = "7.4.0"
+    val testcontainers = "1.21.3"
     val zioLogging     = "2.5.0"
     val logbackClassic = "1.5.18"
-    val gt             = "33.0"
+    val geoTools       = "33.1"
   }
 
   object Dependencies {
@@ -65,7 +65,7 @@ object Awa {
     )
 
     val zioGrpc = declare(
-      "io.grpc"               % "grpc-netty"           % "1.72.0",
+      "io.grpc"               % "grpc-netty"           % "1.73.0",
       "com.thesamet.scalapb" %% "scalapb-runtime-grpc" % scalapb.compiler.Version.scalapbVersion,
     )
 
@@ -95,7 +95,7 @@ object Awa {
     )
 
     val gtCrs = declare(
-      "org.geotools" % "gt-main"  % Version.gt exclude ("javax.media", "jai_core"),
+      "org.geotools" % "gt-main"  % Version.geoTools exclude ("javax.media", "jai_core"),
       "javax.media"  % "jai_core" % "1.1.3" from "https://repo.osgeo.org/repository/release/javax/media/jai_core/1.1.3/jai_core-1.1.3.jar",
     )
   }
@@ -110,4 +110,9 @@ object Awa {
 
     val scalamock = Test / scalacOptions += "-experimental"
   }
+
+  val commonSettings: Seq[Setting[_]] = Seq(
+    Settings.zioTest,
+    Settings.scalamock,
+  )
 }

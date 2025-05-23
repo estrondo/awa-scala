@@ -9,6 +9,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-Xsemanticdb",
 )
 
+ThisBuild / Test / parallelExecution := false
+
 //noinspection SpellCheckingInspection
 val cctt = "compile->compile;test->test"
 
@@ -24,7 +26,6 @@ lazy val root = project
     `module-account-grpc`,
     `module-live-track-grpc`,
     `shared-ducktape`,
-    `shared-logging`,
     `shared-grpc`,
     `shared-gt-crs`,
     `shared-kafka`,
@@ -40,29 +41,32 @@ lazy val `core` = (project in file("core"))
     Dependencies.zio,
     Dependencies.locationTech,
     Dependencies.ducktape,
-    Settings.zioTest,
+    commonSettings,
   )
 
 lazy val `shared-grpc` = (project in file("shared/grpc"))
   .settings(
     name := "awa-shared-grpc",
     Dependencies.zioGrpc,
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
   )
 
-lazy val `shared-logging` = (project in file("shared/logging"))
-  .settings(
-    name := "awa-logging",
-  )
-  .dependsOn(
-    core % cctt,
-  )
+// lazy val `shared-logging` = (project in file("shared/logging"))
+//   .settings(
+//     name := "awa-logging",
+//     commonSettings,
+//   )
+//   .dependsOn(
+//     core % cctt,
+//   )
 
 lazy val `shared-ducktape` = (project in file("shared/ducktape"))
   .settings(
     name := "awa-shared-ducktape",
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
@@ -73,6 +77,7 @@ lazy val `shared-gt-crs` = (project in file("shared/gt-crs"))
     name := "awa-shared-gt-crs",
     Repositories.osgeo,
     Dependencies.gtCrs,
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
@@ -83,7 +88,7 @@ lazy val `shared-kafka` = (project in file("shared/kafka"))
     name := "awa-shared-kafka",
     Dependencies.avro4s,
     Dependencies.kafka,
-    Settings.zioTest,
+    commonSettings,
   )
   .dependsOn(
     core                         % cctt,
@@ -98,6 +103,7 @@ lazy val `shared-test-core` = (project in file("shared-test/core"))
     Dependencies.scalamockWithCompile,
     Dependencies.zioTestWithCompile,
     Dependencies.logging,
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
@@ -108,6 +114,7 @@ lazy val `shared-test-scalamock` = (project in file("shared-test/scalamock"))
     name := "awa-shared-test-scalamock",
     Dependencies.zio,
     Dependencies.scalamockWithCompile,
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
@@ -120,6 +127,7 @@ lazy val `shared-test-testcontainers` = (project in file("shared-test/testcontai
     Dependencies.protoQuill,
     Dependencies.postgresDriver,
     Dependencies.kafka,
+    commonSettings,
   )
   .dependsOn(
     core % cctt,
@@ -132,6 +140,7 @@ lazy val `module-persistence-postgres` = (project in file("modules/persistence-p
     Dependencies.protoQuill,
     Dependencies.ducktape,
     Dependencies.logging,
+    commonSettings,
   )
   .dependsOn(
     `core`                       % cctt,
@@ -147,11 +156,10 @@ lazy val `module-service-impl` = (project in file("modules/service-impl"))
     Dependencies.ducktape,
     Dependencies.scalaMock,
     Dependencies.logging,
-    Settings.scalamock,
+    commonSettings,
   )
   .dependsOn(
     `core`                  % cctt,
-    `shared-logging`        % cctt,
     `shared-test-scalamock` % Test,
     `shared-test-core`      % Test,
   )
@@ -161,6 +169,7 @@ lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
     name := "awa-account-grpc",
     Settings.zioGrpc,
     Dependencies.zioGrpc,
+    commonSettings,
   )
   .dependsOn(
     `core`            % cctt,
@@ -171,6 +180,7 @@ lazy val `module-account-grpc` = (project in file("modules/account-grpc"))
 lazy val `module-live-track-grpc` = (project in file("modules/live-track-grpc"))
   .settings(
     name := "awa-live-track-grpc",
+    commonSettings,
   )
   .dependsOn(
     `core`                      % cctt,
@@ -187,6 +197,7 @@ lazy val `generated-live-track-grpc` = (project in file("generated/live-track-gr
     name := "awa-generated-live-track-grpc",
     Dependencies.zioGrpc,
     Settings.zioGrpc,
+    commonSettings,
   )
   .dependsOn(
     `shared-test-core` % Test,

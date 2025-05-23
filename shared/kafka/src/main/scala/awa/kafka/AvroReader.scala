@@ -7,7 +7,7 @@ import org.apache.avro.Schema
 
 trait AvroReader[T]:
 
-  def read(bytes: Array[Byte]): Either[AwaException.DecodeFailure, T]
+  def read(bytes: Array[Byte]): Either[AwaException.Decode, T]
 
 object AvroReader:
 
@@ -16,9 +16,9 @@ object AvroReader:
 
       private val builder = AvroInputStream.binary[T]
 
-      override def read(bytes: Array[Byte]): Either[AwaException.DecodeFailure, T] =
+      override def read(bytes: Array[Byte]): Either[AwaException.Decode, T] =
         try
           val iterator = builder.from(bytes).build(schema).iterator
           if iterator.hasNext then Right(iterator.next())
-          else Left(AwaException.DecodeFailure("Empty message, unable to read a Avro message."))
-        catch case cause => Left(AwaException.DecodeFailure("Unable to read Avro message.", cause))
+          else Left(AwaException.Decode("Empty message, unable to read an Avro message."))
+        catch case cause => Left(AwaException.Decode("Unable to read Avro message.", cause))

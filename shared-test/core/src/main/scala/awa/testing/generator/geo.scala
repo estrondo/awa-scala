@@ -10,13 +10,13 @@ private val factory = GeometryFactory(PrecisionModel(PrecisionModel.FLOATING), 4
 
 private val rad = math.Pi * 2
 
-extension (gen: AwaGen)
+extension (self: AwaGen)
 
   def geometryFactory: GeometryFactory = factory
 
   def lineString(rMin: Double, rMax: Double, pMin: Int, pMax: Int): Gen[Any, LineString] =
     val r = math.abs(rMax)
-    gen.lineString(
+    self.lineString(
       -180 + r,
       180 - r,
       -90 + r,

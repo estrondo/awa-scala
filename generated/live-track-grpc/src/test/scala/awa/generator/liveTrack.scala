@@ -1,13 +1,13 @@
 package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomAuthorisation
-import awa.testing.generator.randomDeviceId
-import awa.testing.generator.randomDeviceType
-import awa.testing.generator.randomTraceId
-import awa.testing.generator.randomTrackId
+import awa.testing.generator.authorisation
+import awa.testing.generator.deviceId
+import awa.testing.generator.deviceType
 import awa.testing.generator.tagMap
-import awa.typeclass.ToShow
+import awa.testing.generator.traceId
+import awa.testing.generator.trackId
+import awa.typeclass.ToString
 import com.google.protobuf.ByteString
 import java.io.DataOutputStream
 import zio.Random
@@ -23,7 +23,7 @@ private val (genX, genY, genAltitude, genAccuracy) = {
 
 extension (self: AwaGen)
 
-  def randomGrpcSegmentData: Gen[Any, ByteString] =
+  def grpcSegmentData: Gen[Any, ByteString] =
     for
       x                  <- genX
       y                  <- genY
@@ -42,7 +42,7 @@ extension (self: AwaGen)
       dataOutput.writeByte(verticalAccuracy)
       output.toByteString()
 
-  def randomGrpcPositionData: Gen[Any, ByteString] =
+  def grpcPositionData: Gen[Any, ByteString] =
     for
       x                  <- genX
       y                  <- genY
@@ -59,40 +59,40 @@ extension (self: AwaGen)
       dataOuput.writeByte(verticalAccuracy)
       output.toByteString()
 
-  def randomLiveTrackSegment: Gen[Any, LiveTrackSegment] =
-    for data <- Gen.chunkOfBounded(2, 60)(self.randomGrpcSegmentData)
+  def liveTrackSegment: Gen[Any, LiveTrackSegment] =
+    for data <- Gen.chunkOfBounded(2, 60)(self.grpcSegmentData)
     yield LiveTrackSegment(
       data = data,
     )
 
-  def randomLiveTrackRequestContent: Gen[Any, LiveTrackRequest.Content] =
-    Gen.oneOf(randomLiveTrackRequestPositionContent, randomLiveTrackSegmentContent)
+  def liveTrackRequestContent: Gen[Any, LiveTrackRequest.Content] =
+    Gen.oneOf(liveTrackRequestPositionContent, liveTrackSegmentContent)
 
-  def randomLiveTrackRequestPositionContent: Gen[Any, LiveTrackRequest.Content] =
-    randomLiveTrackPosition.map(LiveTrackRequest.Content.Position.apply)
+  def liveTrackRequestPositionContent: Gen[Any, LiveTrackRequest.Content] =
+    liveTrackPosition.map(LiveTrackRequest.Content.Position.apply)
 
-  def randomLiveTrackSegmentContent: Gen[Any, LiveTrackRequest.Content] =
-    randomLiveTrackSegment.map(LiveTrackRequest.Content.Segment.apply)
+  def liveTrackSegmentContent: Gen[Any, LiveTrackRequest.Content] =
+    liveTrackSegment.map(LiveTrackRequest.Content.Segment.apply)
 
-  def randomLiveTrackPosition: Gen[Any, LiveTrackPosition] =
-    for data <- self.randomGrpcPositionData yield LiveTrackPosition(data)
+  def liveTrackPosition: Gen[Any, LiveTrackPosition] =
+    for data <- self.grpcPositionData yield LiveTrackPosition(data)
 
-  def randomLiveTrackRequest(gen: Gen[Any, LiveTrackRequest.Content]): Gen[Any, LiveTrackRequest] =
+  def liveTrackRequest(gen: Gen[Any, LiveTrackRequest.Content]): Gen[Any, LiveTrackRequest] =
     for
-      traceId          <- self.randomTraceId
-      trackId          <- self.randomTrackId
-      authorisation    <- self.randomAuthorisation
+      traceId          <- self.traceId
+      trackId          <- self.trackId
+      authorisation    <- self.authorisation
       tagMap           <- self.tagMap(Gen.string, Gen.string)
-      deviceId         <- self.randomDeviceId
-      deviceType       <- self.randomDeviceType
-      liveTrackSegment <- self.randomLiveTrackSegment
+      deviceId         <- self.deviceId
+      deviceType       <- self.deviceType
+      liveTrackSegment <- self.liveTrackSegment
       firmwareVersion  <- Gen.string
-      authorisation    <- self.randomAuthorisation
+      authorisation    <- self.authorisation
       content          <- gen
       now              <- self.nowZonedDateTime
     yield LiveTrackRequest(
-      traceId = ToShow(traceId),
-      trackId = ToShow(trackId),
+      traceId = ToString(traceId),
+      trackId = ToString(trackId),
       tags = tagMap.value,
       timestamp = now.toEpochSecond(),
       deviceId = deviceId.value,

@@ -46,11 +46,11 @@ message LiveTrackRequest {
   string firmware_version = 7;
 
   // classify what's happening.
-  Flag flag = 10;
+  Flag flag = 8;
 
   oneof content {
-    LiveTrackSegment segment = 8;
-    LiveTrackPosition position = 9;
+    LiveTrackSegment segment = 9;
+    LiveTrackPosition position = 10;
   }
 }
 

@@ -136,7 +136,7 @@ object LiveTrackServiceImpl:
               .transform(
                 Field.fallibleConst(
                   _.traceId,
-                  IdValidator[TraceId]("traceId", "It must be not empty.")(request.traceId),
+                  IdValidator[TraceId]("traceId")(request.traceId),
                 ),
                 Field.fallibleConst(
                   _.segment,
@@ -160,7 +160,7 @@ object LiveTrackServiceImpl:
                 ),
               )
               .left
-              .map(AwaException.WithNotes("Invalid LiveTrackSegment.", _))
+              .map(AwaException.WithNote("Invalid LiveTrackSegment.", _))
           }
           .logWarn("Unable to convert the LiveTrackSegmentInput.")
           .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
@@ -201,7 +201,7 @@ object LiveTrackServiceImpl:
                 ),
               )
               .left
-              .map(AwaException.WithNotes("", _))
+              .map(AwaException.WithNote("", _))
           }
           .logWarn("Unable to convert to LiveTrackPositionInput.")
           .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
@@ -244,7 +244,7 @@ object LiveTrackServiceImpl:
                 ),
               )
               .left
-              .map(AwaException.WithNotes("Invalid CreateLiveTrackRequest.", _))
+              .map(AwaException.WithNote("Invalid CreateLiveTrackRequest.", _))
           }
           .logWarn("Unable to convert to LiveTrackInput.")
           .mapError(convertToLiveTrackError(InvalidCreateTrackRequest))
@@ -258,13 +258,13 @@ object LiveTrackServiceImpl:
 
       private def convertToLiveTrackError(code: String)(cause: AwaException): LiveTrackError =
         cause match
-          case withNotes: AwaException.WithNotes =>
+          case withNote: AwaException.WithNote =>
             LiveTrackError(
               code = code,
               message = cause.getMessage,
-              notes = for note <- withNotes.notes yield ErrorNote(note.note, note.description),
+              notes = for note <- withNote.notes yield ErrorNote(note.note, note.description),
             )
-          case _                                 =>
+          case _                               =>
             LiveTrackError(
               code = code,
               message = cause.getMessage,

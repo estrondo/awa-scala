@@ -4,13 +4,13 @@ import awa.model.Account
 import awa.model.data.CreatedAt
 import zio.test.Gen
 
-extension (gen: AwaGen)
-  def randomAccount: Gen[Any, Account] =
+extension (self: AwaGen)
+  def account: Gen[Any, Account] =
     for
-      id       <- gen.randomAccountId
-      email    <- gen.randomEmail
-      createAt <- gen.nowZonedDateTime
-      provider <- gen.randomIdentityProvider
+      id       <- self.accountId
+      email    <- self.email
+      createAt <- self.nowZonedDateTime
+      provider <- self.identityProvider
     yield Account(
       id = id,
       email = email,

@@ -9,8 +9,8 @@ import awa.scalamock.ZIOStubBaseOperations
 import awa.service.TrackSegmentService
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
-import awa.testing.generator.randomLiveTrackSegmentInput
-import awa.testing.generator.randomTrack
+import awa.testing.generator.liveTrackSegmentInput
+import awa.testing.generator.track
 import org.scalamock.stubs.ZIOStubs
 import zio.ZIO
 import zio.ZLayer
@@ -23,8 +23,8 @@ object TrackSegmentServiceImplSpec extends Spec with IdGeneratorZIOStub with ZIO
       val gen =
         for
           expectedId <- AwaGen.generateId
-          input      <- AwaGen.randomLiveTrackSegmentInput
-          track      <- AwaGen.randomTrack
+          input      <- AwaGen.liveTrackSegmentInput
+          track      <- AwaGen.track
         yield (
           expectedId,
           input,

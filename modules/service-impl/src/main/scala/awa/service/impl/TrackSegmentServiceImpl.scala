@@ -1,14 +1,17 @@
 package awa.service.impl
 
-import awa.*
+import awa.AwaException
+import awa.F
+import awa.annotated
 import awa.generator.IdGenerator
 import awa.input.TrackSegmentInput
+import awa.mapErrorToAwa
 import awa.model.Track
 import awa.model.TrackSegment
 import awa.model.data.TrackSegmentId
 import awa.persistence.TrackSegmentRepository
 import awa.service.TrackSegmentService
-import awa.typeclass.ToShow
+import awa.typeclass.ToString
 import io.github.arainko.ducktape.*
 import zio.ZIO
 
@@ -28,9 +31,9 @@ object TrackSegmentServiceImpl:
         _            <- ZIO.logInfo("TrackSegment was added.")
       yield added
     }.annotated(
-      "segment.traceId" -> ToShow(input.traceId),
-      "track.id"        -> ToShow(track.id),
-      "account.id"      -> ToShow(track.accountId),
+      "segment.traceId" -> ToString(input.traceId),
+      "track.id"        -> ToString(track.id),
+      "account.id"      -> ToString(track.accountId),
     )
 
     private def convert(input: TrackSegmentInput, track: Track): F[TrackSegment] =
