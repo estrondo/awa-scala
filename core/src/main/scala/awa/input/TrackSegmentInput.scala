@@ -1,7 +1,7 @@
 package awa.input
 
-import awa.model.data.DeviceId
-import awa.model.data.DeviceType
+import awa.model.data.Client
+import awa.model.data.Platform
 import awa.model.data.Segment
 import awa.model.data.SegmentData
 import awa.model.data.StartedAt
@@ -14,8 +14,8 @@ case class TrackSegmentInput(
     traceId: TraceId,
     tagMap: TagMap,
     startedAt: StartedAt,
-    deviceId: Option[DeviceId],
-    deviceType: Option[DeviceType],
+    platform: Platform,
+    client: Client,
     segment: Segment,
     segmentData: SegmentData,
 )

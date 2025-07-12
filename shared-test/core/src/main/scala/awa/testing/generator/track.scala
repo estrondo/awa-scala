@@ -12,14 +12,14 @@ extension (self: AwaGen)
       trackId       <- self.trackId
       accountId     <- self.accountId
       startedAt     <- self.nowZonedDateTime
-      deviceId      <- self.deviceId
-      deviceType    <- self.deviceType
+      platform      <- self.platform
+      client        <- self.client
       startedBefore <- Gen.int(60, 90)
     yield Track(
       id = trackId,
       accountId = accountId,
       startedAt = StartedAt(startedAt),
-      deviceId = deviceId,
-      deviceType = deviceType,
+      platform = platform,
+      client = client,
       createdAt = CreatedAt(startedAt.minus(startedBefore, ChronoUnit.SECONDS)),
     )

@@ -1,12 +1,12 @@
 package awa.testing.generator
 
 import awa.model.data.AccountId
-import awa.model.data.DeviceId
-import awa.model.data.DeviceType
+import awa.model.data.Client
 import awa.model.data.Email
 import awa.model.data.HorizontalAccuracy
 import awa.model.data.IdentityProvider
 import awa.model.data.Order
+import awa.model.data.Platform
 import awa.model.data.PositionData
 import awa.model.data.RecordedAt
 import awa.model.data.Segment
@@ -34,13 +34,16 @@ extension (self: AwaGen)
       country <- Gen.stringN(2)(Gen.alphaChar)
     yield Email(s"$user@$domain.$country")
 
-  def deviceType: Gen[Any, DeviceType] =
-    for value <- Gen.stringBounded(1, 16)(Gen.alphaNumericChar)
-    yield DeviceType(value)
+  def platform: Gen[Any, Platform] =
+    val a = for v <- Gen.elements("android:1.23", "other:2.22.111") yield s"xaomi:$v"
+    val b = for v <- Gen.elements("1.1.0", "2.1.1") yield s"iphone:$v"
+    val c = for v <- Gen.elements("archlinux", "macos:10", "windows:11") yield s"desktop:$v"
+    Gen.oneOf(a, b, c).map(Platform.apply)
 
-  def deviceId: Gen[Any, DeviceId] =
-    for value <- Gen.stringBounded(1, 16)(Gen.alphaNumericChar)
-    yield DeviceId(value)
+  def client: Gen[Any, Client] =
+    val a = for v <- Gen.elements("1.1.0", "2.2.8") yield s"awa:$v"
+    val b = for v <- Gen.elements("0.0.1", "11") yield s"other:$v"
+    Gen.oneOf(a, b).map(Client.apply)
 
   def identityProvider: Gen[Any, IdentityProvider] =
     for value <- Gen.alphaNumericString yield IdentityProvider(value)

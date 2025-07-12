@@ -1,8 +1,8 @@
 package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
-import awa.testing.generator.deviceId
-import awa.testing.generator.deviceType
+import awa.testing.generator.client
+import awa.testing.generator.platform
 import awa.testing.generator.traceId
 import awa.typeclass.ToString
 import zio.test.Gen
@@ -10,13 +10,13 @@ import zio.test.Gen
 extension (self: AwaGen)
   def createLiveTrackRequest: Gen[Any, CreateLiveTrackRequest] =
     for
-      traceId    <- self.traceId
-      now        <- self.nowZonedDateTime
-      deviceId   <- self.deviceId
-      deviceType <- self.deviceType
+      traceId  <- self.traceId
+      now      <- self.nowZonedDateTime
+      platform <- self.platform
+      client   <- self.client
     yield CreateLiveTrackRequest(
       traceId = ToString(traceId),
       timestamp = now.toEpochSecond(),
-      deviceId = deviceId.value,
-      deviceType = deviceType.value,
+      platform = platform.value,
+      client = client.value,
     )

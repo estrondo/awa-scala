@@ -11,8 +11,8 @@ extension (self: AwaGen)
       traceId     <- self.traceId
       tagMap      <- self.tagMap(Gen.string, Gen.string)
       startedAt   <- self.startedAtNow
-      deviceId    <- Gen.option(self.deviceId)
-      deviceType  <- Gen.option(self.deviceType)
+      platform    <- self.platform
+      client      <- self.client
       lineString  <- self.lineString(-50, -40, -30, -10, 0.0001, 0.001, 10, 1000)
       segmentData <- self.segmentData
     yield TrackSegmentInput(
@@ -20,8 +20,8 @@ extension (self: AwaGen)
       traceId = traceId,
       tagMap = tagMap,
       startedAt = startedAt,
-      deviceId = deviceId,
-      deviceType = deviceType,
+      platform = platform,
+      client = client,
       segment = Segment(lineString),
       segmentData = segmentData,
     )

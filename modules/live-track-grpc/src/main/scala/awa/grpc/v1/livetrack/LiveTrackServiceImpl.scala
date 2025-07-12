@@ -23,8 +23,8 @@ import awa.model.Authorisation
 import awa.model.Track
 import awa.model.TrackPosition
 import awa.model.TrackSegment
-import awa.model.data.DeviceId
-import awa.model.data.DeviceType
+import awa.model.data.Client
+import awa.model.data.Platform
 import awa.model.data.Segment
 import awa.model.data.StartedAt
 import awa.model.data.TagMap
@@ -235,12 +235,12 @@ object LiveTrackServiceImpl:
                   StartedAtValidator.notAfter("startedAt", now)(request.timestamp),
                 ),
                 Field.fallibleConst(
-                  _.deviceId,
-                  NotEmptyValidator[DeviceId]("deviceId", "Device Id must be informed.")(request.deviceId),
+                  _.platform,
+                  NotEmptyValidator[Platform]("platform", "Platform must be informed.")(request.platform),
                 ),
                 Field.fallibleConst(
-                  _.deviceType,
-                  NotEmptyValidator[DeviceType]("deviceType", "Device Type must be informed.")(request.deviceType),
+                  _.client,
+                  NotEmptyValidator[Client]("deviceType", "Device Type must be informed.")(request.client),
                 ),
               )
               .left

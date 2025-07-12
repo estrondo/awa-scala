@@ -6,10 +6,10 @@ import scala.reflect.ClassTag
 import zio.Runtime
 import zio.ZLayer
 import zio.logging.backend.SLF4J
+import zio.test.TestAspect
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
 import zio.test.testEnvironment
-import zio.test.TestAspect
 
 abstract class Spec extends ZIOSpecDefault:
 

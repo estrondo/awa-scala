@@ -2,8 +2,8 @@ package awa.v1.generated.livetrack
 
 import awa.testing.generator.AwaGen
 import awa.testing.generator.authorisation
-import awa.testing.generator.deviceId
-import awa.testing.generator.deviceType
+import awa.testing.generator.client
+import awa.testing.generator.platform
 import awa.testing.generator.tagMap
 import awa.testing.generator.traceId
 import awa.testing.generator.trackId
@@ -83,8 +83,8 @@ extension (self: AwaGen)
       trackId          <- self.trackId
       authorisation    <- self.authorisation
       tagMap           <- self.tagMap(Gen.string, Gen.string)
-      deviceId         <- self.deviceId
-      deviceType       <- self.deviceType
+      platform         <- self.platform
+      client           <- self.client
       liveTrackSegment <- self.liveTrackSegment
       firmwareVersion  <- Gen.string
       authorisation    <- self.authorisation
@@ -95,8 +95,7 @@ extension (self: AwaGen)
       trackId = ToString(trackId),
       tags = tagMap.value,
       timestamp = now.toEpochSecond(),
-      deviceId = deviceId.value,
-      deviceType = deviceType.value,
-      firmwareVersion = firmwareVersion,
+      platform = platform.value,
+      client = client.value,
       content = content,
     )

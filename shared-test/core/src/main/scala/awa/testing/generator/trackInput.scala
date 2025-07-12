@@ -7,13 +7,13 @@ import zio.test.Gen
 extension (self: AwaGen)
   def liveTrackInput: Gen[Any, TrackInput] =
     for
-      traceId    <- self.traceId
-      started    <- self.nowZonedDateTime
-      deviceId   <- self.deviceId
-      deviceType <- self.deviceType
+      traceId  <- self.traceId
+      started  <- self.nowZonedDateTime
+      platform <- self.platform
+      client   <- self.client
     yield TrackInput(
       traceId = traceId,
       startedAt = StartedAt(started),
-      deviceId = deviceId,
-      deviceType = deviceType,
+      platform = platform,
+      client = client,
     )

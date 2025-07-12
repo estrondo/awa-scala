@@ -5,8 +5,8 @@ create schema if not exists awa;
 create table if not exists awa.track (
     id uuid primary key,
     account_id uuid not null,
-    device_id varchar(16) not null,
-    device_type varchar(16) not null,
+    platform varchar(32) not null,
+    client varchar(32) not null,
     started_at timestamp with time zone not null,
     created_at timestamp with time zone not null
 );
