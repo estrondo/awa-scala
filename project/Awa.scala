@@ -22,6 +22,7 @@ object Awa {
     val zioLogging     = "2.5.0"
     val logbackClassic = "1.5.18"
     val geoTools       = "33.1"
+    val googleS2       = "2.0.0"
   }
 
   object Dependencies {
@@ -92,6 +93,10 @@ object Awa {
       "dev.zio"       %% "zio-logging"        % Version.zioLogging,
       "dev.zio"       %% "zio-logging-slf4j2" % Version.zioLogging,
       "ch.qos.logback" % "logback-classic"    % Version.logbackClassic,
+    )
+
+    val googleS2 = declare(
+      "com.google.geometry" % "s2-geometry" % Version.googleS2,
     )
 
     val gtCrs = declare(

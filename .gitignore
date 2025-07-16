@@ -21,6 +21,7 @@
 /shared/ducktape/target/
 /shared/gt-crs/target/
 /shared/kafka/target/
+/shared/geo-index/target/
 
 /shared-test/core/target/
 /shared-test/scalamock/target/

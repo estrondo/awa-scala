@@ -7,7 +7,7 @@ opaque type Segment = LineString
 
 object Segment:
 
-  def apply(lineString: LineString): Segment = lineString
+  def apply(self: LineString): Segment = self
 
   given Transformer[LineString, Segment] with
     override def transform(value: LineString): Segment = value
@@ -15,4 +15,9 @@ object Segment:
   given Transformer[Segment, LineString] with
     override def transform(value: Segment): LineString = value
 
-  extension (segment: Segment) inline def value: LineString = segment
+  extension (self: Segment)
+
+    inline def value: LineString = self
+
+    inline def foreach(f: (Int, Position) => Unit): Unit =
+      for i <- 0 until self.getNumPoints() do f(i, Position(self.getPointN(i)))

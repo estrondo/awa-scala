@@ -6,6 +6,9 @@ opaque type Position = Point
 
 object Position:
 
-  def apply(value: Point): Position = value
+  def apply(self: Point): Position = self
 
-  extension (value: Position) def value: Point = value
+  extension (self: Position)
+    def point: Point = self
+    def x: Double    = self.getX()
+    def y: Double    = self.getY()

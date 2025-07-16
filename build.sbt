@@ -54,14 +54,17 @@ lazy val `shared-grpc` = (project in file("shared/grpc"))
     core % cctt,
   )
 
-// lazy val `shared-logging` = (project in file("shared/logging"))
-//   .settings(
-//     name := "awa-logging",
-//     commonSettings,
-//   )
-//   .dependsOn(
-//     core % cctt,
-//   )
+lazy val `shared-geo-index` = (project in file("shared/geo-index"))
+  .settings(
+    name := "awa-shared-geo-index",
+    Dependencies.zio,
+    Dependencies.googleS2,
+    commonSettings,
+  )
+  .dependsOn(
+    core               % cctt,
+    `shared-test-core` % Test,
+  )
 
 lazy val `shared-ducktape` = (project in file("shared/ducktape"))
   .settings(
