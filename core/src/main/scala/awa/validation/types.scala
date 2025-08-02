@@ -1,3 +1,3 @@
 package awa.validation
 
-type Valid[A] = Either[Seq[FailureNote], A]
+type IsValid[A] = Either[Seq[FailureNote], A]

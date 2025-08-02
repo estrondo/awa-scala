@@ -16,16 +16,14 @@ import awa.grpc.errors.InvalidLiveTrackRequest
 import awa.grpc.errors.UnableToCreateTrack
 import awa.grpc.errors.UnableToTrack
 import awa.input.TrackInput
-import awa.input.TrackPositionInput
 import awa.input.TrackSegmentInput
 import awa.logWarn
 import awa.model.Authorisation
 import awa.model.Track
-import awa.model.TrackPosition
 import awa.model.TrackSegment
 import awa.model.data.Client
-import awa.model.data.Platform
-import awa.model.data.Segment
+import awa.model.data.Device
+import awa.model.data.SegmentPath
 import awa.model.data.StartedAt
 import awa.model.data.TagMap
 import awa.model.data.TraceId
@@ -36,7 +34,6 @@ import awa.v1.generated.livetrack.CreateLiveTrackResponse
 import awa.v1.generated.livetrack.ErrorNote
 import awa.v1.generated.livetrack.LiveTrackCreated
 import awa.v1.generated.livetrack.LiveTrackError
-import awa.v1.generated.livetrack.LiveTrackPosition
 import awa.v1.generated.livetrack.LiveTrackRequest
 import awa.v1.generated.livetrack.LiveTrackResponse
 import awa.v1.generated.livetrack.LiveTrackSegment
@@ -59,7 +56,7 @@ object LiveTrackServiceImpl:
   def apply(
       timeGenerator: TimeGenerator,
       service: TrackService,
-  )(using GeometryFactory): ZioLivetrack.ZLiveTrackService[Authorisation] =
+  )(using GeometryFactory, TimeGenerator): ZioLivetrack.ZLiveTrackService[Authorisation] =
     new:
       override def create(
           request: CreateLiveTrackRequest,
@@ -86,17 +83,11 @@ object LiveTrackServiceImpl:
       private def handleLiveTrackItem(
           authorisation: Authorisation,
       )(request: LiveTrackRequest): GrpcIO[LiveTrackResponse] =
-        for either <- convertToTrackInput(request).flatMap {
-                        case input: TrackSegmentInput  =>
-                          service
-                            .track(input, authorisation.accountId)
-                            .map(convertToLiveTrackSuccess)
-                            .mapError(convertToLiveTrackError(UnableToTrack))
-                        case input: TrackPositionInput =>
-                          service
-                            .track(input, authorisation.accountId)
-                            .map(convertToLiveTrackSuccess)
-                            .mapError(convertToLiveTrackError(UnableToTrack))
+        for either <- convertToTrackInput(request).flatMap { input =>
+                        service
+                          .track(input, authorisation.accountId)
+                          .map(convertToLiveTrackSuccess)
+                          .mapError(convertToLiveTrackError(UnableToTrack))
                       }.either
         yield LiveTrackResponse(
           traceId = request.traceId,
@@ -113,22 +104,22 @@ object LiveTrackServiceImpl:
 
       private def convertToTrackInput(
           request: LiveTrackRequest,
-      ): EF[LiveTrackError, TrackSegmentInput | TrackPositionInput] =
+      ): EF[LiveTrackError, TrackSegmentInput] =
         request.content match {
-          case LiveTrackRequest.Content.Segment(value)  => convertToLiveTrackSegmentInput(value, request)
-          case LiveTrackRequest.Content.Position(value) => convertToLiveTrackPositionInput(value, request)
-          case LiveTrackRequest.Content.Empty           => reportEmptyLiveTrackRequest(request)
+          case LiveTrackRequest.Content.Segment(value) => convertToLiveTrackSegmentInput(value, request)
+          case LiveTrackRequest.Content.Empty          => reportEmptyLiveTrackRequest(request)
         }
 
       private def convertToLiveTrackSegmentInput(
-          value: LiveTrackSegment,
+          content: LiveTrackSegment,
           request: LiveTrackRequest,
       ): EF[LiveTrackError, TrackSegmentInput] =
         ZIO
           .fromEither {
-            val now                              = timeGenerator.now()
-            val (validSegment, validSegmentData) =
-              LiveTrackProtocol.extractSegment("segment", "segmentData")(value.data, request)
+            val now = timeGenerator.now()
+
+            val (path, timestamp, horizontalAccuracy, verticalAccuracy) =
+              LiveTrackProtocol.extractTrackSegmentFromByteString("data", content.data, request)
 
             request
               .into[TrackSegmentInput]
@@ -139,12 +130,20 @@ object LiveTrackServiceImpl:
                   IdValidator[TraceId]("traceId")(request.traceId),
                 ),
                 Field.fallibleConst(
-                  _.segment,
-                  validSegment,
+                  _.path,
+                  path,
                 ),
                 Field.fallibleConst(
-                  _.segmentData,
-                  validSegmentData,
+                  _.timestamp,
+                  timestamp,
+                ),
+                Field.fallibleConst(
+                  _.verticalAccuracy,
+                  verticalAccuracy,
+                ),
+                Field.fallibleConst(
+                  _.horizontalAccuracy,
+                  horizontalAccuracy,
                 ),
                 Field.fallibleConst(
                   _.startedAt,
@@ -165,55 +164,11 @@ object LiveTrackServiceImpl:
           .logWarn("Unable to convert the LiveTrackSegmentInput.")
           .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
 
-      private def convertToLiveTrackPositionInput(
-          value: LiveTrackPosition,
-          request: LiveTrackRequest,
-      ): EF[LiveTrackError, TrackPositionInput] =
-        ZIO
-          .fromEither {
-
-            val now                            = timeGenerator.now()
-            val (valPosition, valPositionData) =
-              LiveTrackProtocol.extractPosition("position", "positionData")(value.data, request)
-            request
-              .into[TrackPositionInput]
-              .fallible
-              .transform(
-                Field.fallibleConst(
-                  _.traceId,
-                  IdValidator[TraceId]("traceId")(request.traceId),
-                ),
-                Field.fallibleConst(
-                  _.positionData,
-                  valPositionData,
-                ),
-                Field.fallibleConst(
-                  _.point,
-                  valPosition,
-                ),
-                Field.fallibleConst(
-                  _.startedAt,
-                  StartedAtValidator.notAfter("startedAt", now)(request.timestamp),
-                ),
-                Field.const(
-                  _.tagMap,
-                  TransformTo[TagMap](request.tags),
-                ),
-              )
-              .left
-              .map(AwaException.WithNote("", _))
-          }
-          .logWarn("Unable to convert to LiveTrackPositionInput.")
-          .mapError(convertToLiveTrackError(InvalidLiveTrackRequest))
-
       private def convertToLiveTrackSuccess(track: TrackSegment): LiveTrackSuccess =
         LiveTrackSuccess(
-          numPositions = track.segment.value.getNumPoints,
-          length = Geodesic.length(track.segment),
+          numPositions = track.path.value.getNumPoints,
+          length = Geodesic.length(track.path),
         )
-
-      private def convertToLiveTrackSuccess(@unused track: TrackPosition): LiveTrackSuccess =
-        LiveTrackSuccess(numPositions = 1)
 
       private def reportEmptyLiveTrackRequest(@unused request: LiveTrackRequest): EF[LiveTrackError, Nothing] =
         ZIO.fail(LiveTrackError(code = EmptyTracking))
@@ -235,8 +190,8 @@ object LiveTrackServiceImpl:
                   StartedAtValidator.notAfter("startedAt", now)(request.timestamp),
                 ),
                 Field.fallibleConst(
-                  _.platform,
-                  NotEmptyValidator[Platform]("platform", "Platform must be informed.")(request.platform),
+                  _.device,
+                  NotEmptyValidator[Device]("device", "Device must be informed.")(request.device),
                 ),
                 Field.fallibleConst(
                   _.client,

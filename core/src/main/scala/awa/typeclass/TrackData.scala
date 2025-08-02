@@ -2,7 +2,7 @@ package awa.typeclass
 
 import awa.model.TrackSegment
 import awa.model.data.Position
-import awa.model.data.Segment
+import awa.model.data.SegmentPath
 
 trait TrackData[T]:
 
@@ -16,5 +16,5 @@ object TrackData:
 
     override def foldLeft[V](data: TrackSegment, initial: V)(f: (V, Int, Position) => V): V =
       var outcome = initial
-      for (index, position) <- data.segment do outcome = f(outcome, index, position)
+      for (index, position) <- data.path do outcome = f(outcome, index, position)
       outcome

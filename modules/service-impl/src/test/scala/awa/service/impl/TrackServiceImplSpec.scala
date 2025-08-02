@@ -39,7 +39,7 @@ object TrackServiceImplSpec extends Spec with ZIOStubs with IdGeneratorZIOStub w
             id = TrackId(expectedId),
             accountId = accountId,
             startedAt = trackInput.startedAt,
-            platform = trackInput.platform,
+            device = trackInput.device,
             client = trackInput.client,
             createdAt = CreatedAt(now),
           ),

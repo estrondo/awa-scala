@@ -2,7 +2,7 @@ package awa.ducktape.fallible
 
 import awa.typeclass.IsEmpty
 import awa.validation.FailureNote
-import awa.validation.Valid
+import awa.validation.IsValid
 import io.github.arainko.ducktape.Transformer
 
 object NotEmptyValidator:
@@ -12,6 +12,6 @@ object NotEmptyValidator:
   class PartiallyApplied[Dest]:
     def apply[Source](note: String, message: String)(
         value: Source,
-    )(using t: Transformer[Source, Dest], e: IsEmpty[Source]): Valid[Dest] =
+    )(using t: Transformer[Source, Dest], e: IsEmpty[Source]): IsValid[Dest] =
       if e.nonEmpty(value) then Right(t.transform(value))
       else Left(Seq(FailureNote(note, message)))

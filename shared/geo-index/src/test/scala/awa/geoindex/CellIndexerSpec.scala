@@ -1,6 +1,6 @@
 package awa.geoindex
 
-import awa.model.data.Segment
+import awa.model.data.SegmentPath
 import awa.testing.Spec
 import awa.testing.generator.AwaGen
 import awa.testing.generator.trackSegment
@@ -24,7 +24,7 @@ object CellIndexerSpec extends Spec:
         for
           geometryFactory <- ZIO.service[GeometryFactory]
           updated          = original.copy(
-                               segment = Segment(
+                               path = SegmentPath(
                                  geometryFactory.createLineString(
                                    Array(
                                      Coordinate(0, 0),     // 0

@@ -1,95 +1,93 @@
 package awa.grpc.v1.livetrack
 
-import awa.ducktape.TransformTo
-import awa.grpc.protocol.GrpcZonedDateTimeProtocol
-import awa.model.data.HorizontalAccuracy
-import awa.model.data.Position
-import awa.model.data.PositionData
-import awa.model.data.RecordedAt
-import awa.model.data.Segment
-import awa.model.data.SegmentData
-import awa.model.data.VerticalAccuracy
+import awa.generator.TimeGenerator
+import awa.model.data.SegmentHorizontalAccuracy
+import awa.model.data.SegmentPath
+import awa.model.data.SegmentTimestamp
+import awa.model.data.SegmentVerticalAccuracy
 import awa.v1.generated.livetrack.LiveTrackRequest
 import awa.validation.FailureNote
-import awa.validation.Valid
+import awa.validation.IsValid
 import com.google.protobuf.ByteString
+import java.io.ByteArrayInputStream
 import java.io.DataInputStream
+import java.time.ZonedDateTime
 import org.locationtech.jts.geom.Coordinate
 import org.locationtech.jts.geom.GeometryFactory
+import scala.annotation.tailrec
 
 object LiveTrackProtocol:
 
-  private val ZeroAltitude = 20000
+  private val ZeroAltitude = 20000f
 
-  val ExpectedSegmentLength = 14
+  type SegmentData =
+    (
+        IsValid[SegmentPath],
+        IsValid[SegmentTimestamp],
+        IsValid[SegmentHorizontalAccuracy],
+        IsValid[SegmentVerticalAccuracy],
+    )
 
-  val ExpectedPositionLength = 12
+  def extractTrackSegmentFromByteString(field: String, data: Seq[ByteString], request: LiveTrackRequest)(using
+      GeometryFactory,
+      TimeGenerator,
+  ): SegmentData =
+    extractTrackSegmentFromByteArray(field, data.map(_.toByteArray()), request)
 
-  def extractSegment(
-      segmentNote: String,
-      segmentDataNote: String,
-  )(
-      data: Seq[ByteString],
-      request: LiveTrackRequest,
-  )(using GeometryFactory): (Valid[Segment], Valid[SegmentData]) =
-    var segmentFailures     = Seq.empty[FailureNote]
-    var segmentDataFailures = Seq.empty[FailureNote]
-    val coordinates         = Array.ofDim[Coordinate](data.size)
-    val positionData        = Array.ofDim[PositionData](data.size)
-    var now                 = GrpcZonedDateTimeProtocol(request.timestamp)
-    var index               = 0
-    var shouldRead          = false
+  def extractTrackSegmentFromByteArray(field: String, data: Seq[Array[Byte]], request: LiveTrackRequest)(using
+      GeometryFactory,
+      TimeGenerator,
+  ): SegmentData =
+    val size = data.size
+    if size > 1 then
+      val coordinates        = Array.ofDim[Coordinate](size)
+      val timestamp          = Vector.newBuilder[ZonedDateTime]
+      val horizontalAccuracy = Vector.newBuilder[Short]
+      val verticalAccuracy   = Vector.newBuilder[Short]
 
-    for item <- data do
-      if item.size() == ExpectedSegmentLength then
-        if shouldRead then
-          val dataInput          = DataInputStream(item.newInput())
-          val x                  = dataInput.readFloat()
-          val y                  = dataInput.readFloat()
-          val altitude           = dataInput.readUnsignedShort() - ZeroAltitude
-          val timePack           = dataInput.readUnsignedShort()
-          val horizontalAccuracy = dataInput.readUnsignedByte()
-          val verticalAccuracy   = dataInput.readUnsignedByte()
-          coordinates(index) = Coordinate(x, y, altitude.toDouble)
+      @tailrec def readFully(index: Int, now: ZonedDateTime): SegmentData =
+        if index < data.size then
+          val bytes = data(index)
+          if bytes.size != 14 then
+            val failure = Left(Seq(FailureNote(field, s"The $index-th element must have 14 bytes.")))
+            (
+              failure,
+              failure,
+              failure,
+              failure,
+            )
+          else
+            val dataInput  = DataInputStream(ByteArrayInputStream(bytes))
+            val x          = dataInput.readFloat()
+            val y          = dataInput.readFloat()
+            val z          = dataInput.readUnsignedShort() - ZeroAltitude
+            val fragment   = dataInput.readUnsignedShort()
+            val offset     = fragment >> 2
+            val horizontal = dataInput.readUnsignedByte().toShort
+            val vertical   = dataInput.readUnsignedByte().toShort
 
-          now = now.plusSeconds(timePack >>> 6)
-          positionData(index) = TransformTo[PositionData]((now, horizontalAccuracy, verticalAccuracy))
-      else
-        val message = s"Invalid data length of $index-th element."
-        segmentFailures :+= FailureNote(segmentNote, message)
-        segmentDataFailures :+= FailureNote(segmentDataNote, message)
-        shouldRead = false
-      index += 1
+            val coordinate = Coordinate(x, y, z)
+            val moment     = now.plusSeconds(offset)
 
-    if segmentFailures.isEmpty then
-      (
-        Right(TransformTo[Segment](summon[GeometryFactory].createLineString(coordinates))),
-        Right(TransformTo[SegmentData](positionData.toSeq)),
-      )
+            coordinates(index) = coordinate
+            timestamp.addOne(moment)
+            horizontalAccuracy.addOne(horizontal)
+            verticalAccuracy.addOne(vertical)
+            readFully(index + 1, moment)
+        else
+          (
+            Right(SegmentPath(summon[GeometryFactory].createLineString(coordinates))),
+            Right(SegmentTimestamp(timestamp.result())),
+            Right(SegmentHorizontalAccuracy(horizontalAccuracy.result())),
+            Right(SegmentVerticalAccuracy(verticalAccuracy.result())),
+          )
+
+      readFully(0, summon[TimeGenerator].of(request.timestamp))
     else
+      val failures = Left(Seq(FailureNote(field, "Invalid data size, it was expected at least 2 elements.")))
       (
-        Left(segmentFailures),
-        Left(segmentDataFailures),
-      )
-
-  def extractPosition(
-      notePosition: String,
-      notePositionData: String,
-  )(data: ByteString, request: LiveTrackRequest)(using GeometryFactory): (Valid[Position], Valid[PositionData]) =
-    if data.size() == ExpectedPositionLength then
-      val dataInput          = DataInputStream(data.newInput())
-      val x                  = dataInput.readFloat()
-      val y                  = dataInput.readFloat()
-      val altitude           = dataInput.readUnsignedShort() - ZeroAltitude
-      val horizontalAccuracy = HorizontalAccuracy(dataInput.readUnsignedByte())
-      val verticalAccuracy   = VerticalAccuracy(dataInput.readUnsignedByte())
-      val recordedAt         = RecordedAt(GrpcZonedDateTimeProtocol(request.timestamp))
-      (
-        Right(Position(summon[GeometryFactory].createPoint(Coordinate(x, y, altitude)))),
-        Right(PositionData(recordedAt, horizontalAccuracy, verticalAccuracy)),
-      )
-    else
-      (
-        Left(Seq(FailureNote(notePosition, "Invalid data length."))),
-        Left(Seq(FailureNote(notePositionData, "Invalid data length."))),
+        failures,
+        failures,
+        failures,
+        failures,
       )

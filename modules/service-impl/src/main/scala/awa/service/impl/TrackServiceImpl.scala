@@ -4,10 +4,8 @@ import awa.*
 import awa.generator.IdGenerator
 import awa.generator.TimeGenerator
 import awa.input.TrackInput
-import awa.input.TrackPositionInput
 import awa.input.TrackSegmentInput
 import awa.model.Track
-import awa.model.TrackPosition
 import awa.model.TrackSegment
 import awa.model.data.AccountId
 import awa.model.data.CreatedAt
@@ -40,8 +38,6 @@ object TrackServiceImpl:
       "traceId"   -> ToString(input.traceId),
       "accountId" -> ToString(accountId),
     )
-
-    override def track(input: TrackPositionInput, accountId: AccountId): F[TrackPosition] = ???
 
     override def track(input: TrackSegmentInput, accountId: AccountId): F[TrackSegment] = ???
 

@@ -7,7 +7,7 @@ import org.locationtech.jts.geom.LineString
 final case class TrackSegmentRow(
     id: UUID,
     trackId: UUID,
-    segment: LineString,
+    path: LineString,
     startedAt: ZonedDateTime,
     createdAt: ZonedDateTime,
     ord: Option[Int],

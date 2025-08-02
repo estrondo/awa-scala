@@ -11,7 +11,7 @@ service LiveTrackService {
 message CreateLiveTrackRequest {
   string trace_id = 1;
   int64 timestamp = 2;
-  string platform = 3;
+  string device = 3;
   string client = 4;
 }
 
@@ -40,40 +40,27 @@ message LiveTrackRequest {
   // timestamp in seconds.
   int64 timestamp = 4;
 
-  string platform = 5;
+  string device = 5;
 
   string client = 6;
 
   // classify what's happening.
   Flag flag = 7;
 
-  oneof content {
-    LiveTrackSegment segment = 8;
-    LiveTrackPosition position = 9;
-  }
+  oneof content { LiveTrackSegment segment = 8; }
 }
 
 message LiveTrackSegment {
   // BigEndian
-  // for each point:
-  // [float (32 bits): lon]
-  // [float (32 bits): lat]
-  // [unsigned short (16 bits): altitude - 20000 in meters]
+  // for each point (14 bytes):
+  // [float (32 bits): lon] (4 bytes)
+  // [float (32 bits): lat] (4 bytes)
+  // [unsigned short (16 bits): altitude - 20000 in meters] (2 bytes)
   // [unsigned 10 bits: time_offset in seconds]
-  // [6 bits: reserved]
-  // [unsigned byte (8 bits): horizontal accuracy in meters]
-  // [unsigned byte (8 bits): altitude accuracy in meters]
+  // [6 bits: reserved] (2 bytes)
+  // [unsigned byte (8 bits): horizontal accuracy in meters] (1 byte)
+  // [unsigned byte (8 bits): altitude accuracy in meters] (1 byte)
   repeated bytes data = 1;
-}
-
-message LiveTrackPosition {
-  // BigEndian
-  // [float (32 bits): lon]
-  // [float (32 bits): lat]
-  // [unsigned short (16 bits): altitude - 20000 in meters]
-  // [unsigned byte (8 bits): horizontal accuracy in meters]
-  // [unsigned byte (8 bits): altitude accuracy in meters]
-  bytes data = 1;
 }
 
 enum Flag {

@@ -1,5 +1,6 @@
 package awa.scalamock
 
+import awa.generator.TimeGenerator
 import org.scalamock.stubs.Stub
 import org.scalamock.stubs.ZIOStubs
 import zio.Tag
@@ -30,4 +31,8 @@ trait ZIOStubBaseOperations:
 
   inline def stubLayer[T: Tag]: ULayer[Stub[T]] = ZLayer.succeed {
     stub[T]
+  }
+
+  inline def stubTimeGeneratorLayerOf = ZIO.serviceWith[Stub[TimeGenerator]] { stub =>
+    stub.of.returns(x => TimeGenerator.of(x))
   }

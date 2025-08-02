@@ -7,7 +7,7 @@ case class TrackRow(
     id: UUID,
     accountId: UUID,
     startedAt: ZonedDateTime,
-    platform: String,
+    device: String,
     client: String,
     createdAt: ZonedDateTime,
 )

@@ -55,6 +55,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
           _      <- stubLayerWith[TimeGenerator] { generator =>
                       (() => generator.now()).returnsWith(now)
                     }
+          _      <- stubTimeGeneratorLayerOf
           _      <- stubLayerWith[TrackService] { service =>
                       service.add.returns:
                         case (_, accountId) if accountId == authorisation.accountId => ZIO.succeed(track)
@@ -93,6 +94,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
           _      <- stubLayerWith[TimeGenerator] { generator =>
                       (() => generator.now()).returnsWith(now)
                     }
+          _      <- stubTimeGeneratorLayerOf
           _      <- stubLayerWith[TrackService] { service =>
                       (service
                         .track(_: TrackSegmentInput, _: AccountId))
@@ -107,8 +109,8 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
             traceId = request.traceId,
             content = LiveTrackResponse.Content.Success(
               LiveTrackSuccess(
-                numPositions = expectedTrackSegment.segment.value.getNumPoints(),
-                length = Geodesic.length(expectedTrackSegment.segment),
+                numPositions = expectedTrackSegment.path.value.getNumPoints(),
+                length = Geodesic.length(expectedTrackSegment.path),
               ),
             ),
           ),
@@ -119,5 +121,7 @@ object LiveTrackServiceSpec extends Spec, ZIOStubs, ZIOStubBaseOperations:
     ZLayer.succeed(GeometryFactory()),
     stubLayer[TimeGenerator],
     stubLayer[TrackService],
-    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory) => LiveTrackServiceImpl(x, y)(using z)),
+    ZLayer.fromFunction((x: TimeGenerator, y: TrackService, z: GeometryFactory, t: TimeGenerator) =>
+      LiveTrackServiceImpl(x, y)(using z, t),
+    ),
   )

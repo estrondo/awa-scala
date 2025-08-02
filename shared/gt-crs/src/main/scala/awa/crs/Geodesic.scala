@@ -1,11 +1,11 @@
 package awa.crs
 
-import awa.model.data.Segment
+import awa.model.data.SegmentPath
 import org.geotools.referencing.GeodeticCalculator
 
 object Geodesic:
 
-  def length(segment: Segment): Int =
+  def length(segment: SegmentPath): Int =
     // I wanted to use a classic old while here!
     val calculator  = GeodeticCalculator(geoCentricCoordinateReferenceSystem)
     val coordinates = segment.value.getCoordinateSequence

@@ -3,7 +3,7 @@ package awa.v1.generated.livetrack
 import awa.testing.generator.AwaGen
 import awa.testing.generator.authorisation
 import awa.testing.generator.client
-import awa.testing.generator.platform
+import awa.testing.generator.device
 import awa.testing.generator.tagMap
 import awa.testing.generator.traceId
 import awa.testing.generator.trackId
@@ -65,17 +65,8 @@ extension (self: AwaGen)
       data = data,
     )
 
-  def liveTrackRequestContent: Gen[Any, LiveTrackRequest.Content] =
-    Gen.oneOf(liveTrackRequestPositionContent, liveTrackSegmentContent)
-
-  def liveTrackRequestPositionContent: Gen[Any, LiveTrackRequest.Content] =
-    liveTrackPosition.map(LiveTrackRequest.Content.Position.apply)
-
   def liveTrackSegmentContent: Gen[Any, LiveTrackRequest.Content] =
     liveTrackSegment.map(LiveTrackRequest.Content.Segment.apply)
-
-  def liveTrackPosition: Gen[Any, LiveTrackPosition] =
-    for data <- self.grpcPositionData yield LiveTrackPosition(data)
 
   def liveTrackRequest(gen: Gen[Any, LiveTrackRequest.Content]): Gen[Any, LiveTrackRequest] =
     for
@@ -83,7 +74,7 @@ extension (self: AwaGen)
       trackId          <- self.trackId
       authorisation    <- self.authorisation
       tagMap           <- self.tagMap(Gen.string, Gen.string)
-      platform         <- self.platform
+      device           <- self.device
       client           <- self.client
       liveTrackSegment <- self.liveTrackSegment
       firmwareVersion  <- Gen.string
@@ -95,7 +86,7 @@ extension (self: AwaGen)
       trackId = ToString(trackId),
       tags = tagMap.value,
       timestamp = now.toEpochSecond(),
-      platform = platform.value,
+      device = device.value,
       client = client.value,
       content = content,
     )
