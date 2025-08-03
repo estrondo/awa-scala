@@ -15,6 +15,7 @@ object CellIndex:
       .parent(level)
 
   extension (self: CellIndex)
-    def id: Long          = self.id()
-    def level: Int        = self.level()
-    def parent: CellIndex = self.parent()
+    def id: Long                          = self.id()
+    def level: Int                        = self.level()
+    def parent: CellIndex                 = self.parent()
+    private[geoindex] def value: S2CellId = self
