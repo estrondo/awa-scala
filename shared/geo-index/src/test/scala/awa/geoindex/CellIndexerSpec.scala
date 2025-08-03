@@ -41,7 +41,7 @@ object CellIndexerSpec extends Spec:
                                ),
                              )
         yield assertTrue(
-          CellIndexer(updated).map(extract(_)) == Seq(
+          CellIndexer(updated).map(extract) == Seq(
             (0, 13, 1152921521786716160L),
             (1, 13, 1152921521786716160L),
             (2, 13, 1152921521786716160L),
