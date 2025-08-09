@@ -29,6 +29,7 @@ lazy val root = project
     `shared-grpc`,
     `shared-gt-crs`,
     `shared-kafka`,
+    `shared-geo-index`,
     `shared-test-core`,
     `shared-test-scalamock`,
     `shared-test-testcontainers`,

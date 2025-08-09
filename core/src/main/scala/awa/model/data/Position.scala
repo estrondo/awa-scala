@@ -10,5 +10,6 @@ object Position:
 
   extension (self: Position)
     def point: Point = self
-    def x: Double    = self.getX()
-    def y: Double    = self.getY()
+    def x: Double    = self.getCoordinate().x
+    def y: Double    = self.getCoordinate().y
+    def z: Double    = self.getCoordinate().z

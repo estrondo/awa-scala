@@ -21,5 +21,9 @@ object SegmentPath:
 
     inline def value: LineString = self
 
-    inline def foreach(f: (Int, Position) => Unit): Unit =
-      for i <- 0 until self.getNumPoints() do f(i, Position(self.getPointN(i)))
+    def iterator: Iterator[(Int, Position)] =
+      val limit = size
+      Iterator.unfold(0) { index =>
+        if index < limit then Some((index -> Position(self.getPointN(index)), index + 1))
+        else None
+      }

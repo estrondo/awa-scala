@@ -1,11 +1,15 @@
 package awa.testing
 
+import awa.AwaException
+import awa.RF
 import awa.UL
 import org.locationtech.jts.geom.GeometryFactory
 import scala.reflect.ClassTag
 import zio.Runtime
+import zio.ZIO
 import zio.ZLayer
 import zio.logging.backend.SLF4J
+import zio.test.Gen
 import zio.test.TestAspect
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
@@ -27,3 +31,9 @@ abstract class Spec extends ZIOSpecDefault:
     ZLayer.succeed(geometryFactory)
 
   protected val ignore = TestAspect.ignore
+
+  extension [R, A](self: Gen[R, A])
+    def oneSample: RF[R, A] = self.runHead.flatMap {
+      case Some(value) => ZIO.succeed(value)
+      case None        => ZIO.fail(AwaException.Unexpected("No sample!"))
+    }

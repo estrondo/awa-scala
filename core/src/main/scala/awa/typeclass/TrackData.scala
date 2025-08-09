@@ -4,17 +4,22 @@ import awa.model.TrackSegment
 import awa.model.data.Position
 import awa.model.data.SegmentPath
 
-trait TrackData[T]:
+trait TrackData[A]:
 
-  def foldLeft[V](data: T, initial: V)(f: (V, Int, Position) => V): V
+  def foldLeft[B](data: A)(initial: => B)(f: (B, Int, Position) => B): B
 
 object TrackData:
 
-  inline def apply[T](using inline T: TrackData[T]): TrackData[T] = T
+  inline def apply[A](using inline A: TrackData[A]): TrackData[A] = A
 
   given TrackData[TrackSegment] with
 
-    override def foldLeft[V](data: TrackSegment, initial: V)(f: (V, Int, Position) => V): V =
-      var outcome = initial
-      for (index, position) <- data.path do outcome = f(outcome, index, position)
-      outcome
+    override def foldLeft[B](data: TrackSegment)(initial: => B)(f: (B, Int, Position) => B): B =
+      var current  = initial
+      val iterator = data.path.iterator
+
+      while iterator.hasNext do
+        val (index, position) = iterator.next()
+        current = f(current, index, position)
+
+      current
