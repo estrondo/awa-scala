@@ -28,7 +28,7 @@ object PostgresTrackSegmentRepository:
 
     new TrackSegmentRepository with PostgresCodec[SnakeCase](ctx, geometryFactory):
       private inline def table = quote {
-        querySchema[TrackSegmentRow]("track_segment")
+        querySchema[TrackSegmentRow]("awa.track_segment")
       }
 
       override def add(segment: TrackSegment): F[TrackSegment] =

@@ -146,6 +146,13 @@ lazy val `module-persistence-postgres` = (project in file("modules/persistence-p
     Dependencies.logging,
     commonSettings,
   )
+  .enablePlugins(PostgresPlugin)
+  .settings(
+    Test / postgresBaseImage := "docker.io/postgis/postgis:17-3.5-alpine",
+    Test / postgresUsername  := "awa-username",
+    Test / postgresPassword  := "awa-password",
+    Test / postgresDatabase  := "awa-database",
+  )
   .dependsOn(
     `core`                       % cctt,
     `shared-ducktape`            % cctt,

@@ -20,7 +20,7 @@ object PostgresTrackRepository:
     import ctx.*
 
     private inline def table = quote {
-      querySchema[TrackRow]("track")
+      querySchema[TrackRow]("awa.track")
     }
 
     override def add(track: Track): F[Track] =

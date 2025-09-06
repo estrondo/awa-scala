@@ -19,6 +19,7 @@ import zio.Scope
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
+import awa.sbt.AwaPostgreSQLTest
 
 object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, ZIOStubs:
 
@@ -47,7 +48,7 @@ object PostgresTrackSegmentRepositorySpec extends Spec, ZIOStubBaseOperations, Z
   ).provideSome[Scope](
     stubLayer[TimeGenerator],
     geometryFactoryLayer,
-    Container.postgresContainer,
+    Container.postgresContainer(AwaPostgreSQLTest.image),
     PostgresDataSource.fromPostgresContainer,
     PostgresDataSource.dataSourceAsZLayer,
     PostgresDataSource.zioContext,

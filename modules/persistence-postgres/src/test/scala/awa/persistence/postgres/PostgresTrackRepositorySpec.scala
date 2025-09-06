@@ -14,6 +14,7 @@ import zio.Scope
 import zio.ZIO
 import zio.ZLayer
 import zio.test.*
+import awa.sbt.AwaPostgreSQLTest
 
 object PostgresTrackRepositorySpec extends Spec:
 
@@ -27,7 +28,7 @@ object PostgresTrackRepositorySpec extends Spec:
       }
     },
   ).provideSome[Scope](
-    Container.postgresContainer,
+    Container.postgresContainer(AwaPostgreSQLTest.image),
     PostgresDataSource.fromPostgresContainer,
     PostgresDataSource.dataSourceAsZLayer,
     PostgresDataSource.zioContext,

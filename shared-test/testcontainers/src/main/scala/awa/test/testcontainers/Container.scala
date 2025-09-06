@@ -30,16 +30,16 @@ object Container:
       ZIO.acquireRelease(acquire)(release)
     }
 
-  val postgresContainer: ZLayer[Scope, Throwable, PostgreSQLContainerWrapper] = layerOf {
+  def postgresContainer(imagemName: String): ZLayer[Scope, Throwable, PostgreSQLContainerWrapper] = layerOf {
     val container = containers.PostgreSQLContainer(
       DockerImageName
-        .parse("docker.io/library/estrondo:awa-test-postgres-0.0.0")
+        .parse(imagemName)
         .asCompatibleSubstituteFor("postgres"),
     )
 
-    container.withUsername("awa")
-    container.withPassword("awa")
-    container.withDatabaseName("awa-test")
+    container.withUsername("awa-username")
+    container.withPassword("awa-password")
+    container.withDatabaseName("awa-database")
     container.setWaitStrategy(
       LogMessageWaitStrategy()
         .withRegEx(""".*database system is ready to accept connections.*\s""")
