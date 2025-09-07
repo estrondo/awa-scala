@@ -34,7 +34,7 @@ object PostgresPlugin extends AutoPlugin {
           username = postgresUsername.value,
           password = postgresPassword.value,
           logger = streams.value.log,
-          projectDirectory = rootPaths.value("BASE").toFile() / "project",
+          projectDirectory = (ThisBuild / baseDirectory).value / "project",
           targetDirectory = IOF.createDirectory(target.value / "postgres-image-stage"),
         )
 
